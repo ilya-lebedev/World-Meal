@@ -16,5 +16,44 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+/**
+ * IngredientEntry
+ */
+@Entity(tableName = "ingredient")
 public class IngredientEntry {
+
+    @PrimaryKey
+    int id;
+    String name;
+
+    /**
+     * This constructor is used by Room to create IngredientEntries and by MealDbJsonParser.
+     *
+     * @param id Ingredient id
+     * @param name Ingredient name
+     */
+    public IngredientEntry(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

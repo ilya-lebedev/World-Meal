@@ -27,17 +27,17 @@ public class AreaEntry {
 
     @PrimaryKey
     private int id;
-    private String areaName;
+    private String name;
 
     /**
      * This constructor is used by Room to create AreaEntries and by MealDbJsonParser.
      *
      * @param id Area id
-     * @param areaName Area name
+     * @param name Area name
      */
-    public AreaEntry(int id, String areaName) {
+    public AreaEntry(int id, String name) {
         this.id = id;
-        this.areaName = areaName;
+        this.name = name;
     }
 
     public int getId() {
@@ -48,12 +48,12 @@ public class AreaEntry {
         this.id = id;
     }
 
-    public String getAreaName() {
-        return areaName;
+    public String getName() {
+        return name;
     }
 
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

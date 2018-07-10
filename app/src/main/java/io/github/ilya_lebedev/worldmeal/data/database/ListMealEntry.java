@@ -20,4 +20,46 @@ package io.github.ilya_lebedev.worldmeal.data.database;
  * ListMealEntry
  */
 public class ListMealEntry {
+
+    private long id;
+    private String name;
+    private String thumbnail;
+
+    /**
+     * This constructor is used by Room to create ListMealEntry and by MealDbJsonParser.
+     *
+     * @param id List meal id
+     * @param name List meal name
+     * @param thumbnail List meal thumbnail
+     */
+    public ListMealEntry(long id, String name, String thumbnail) {
+        this.id = id;
+        this.name = name;
+        this.thumbnail = thumbnail;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
 }

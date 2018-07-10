@@ -26,8 +26,8 @@ import android.arch.persistence.room.PrimaryKey;
 public class IngredientEntry {
 
     @PrimaryKey
-    int id;
-    String name;
+    private int id;
+    private String name;
 
     /**
      * This constructor is used by Room to create IngredientEntries and by MealDbJsonParser.

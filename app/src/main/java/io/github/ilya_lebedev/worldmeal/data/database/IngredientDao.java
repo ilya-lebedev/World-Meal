@@ -16,5 +16,33 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
+/**
+ * IngredientDao is the {@link Dao} which provides an api
+ * for data operations with ingredient table
+ */
+@Dao
 public interface IngredientDao {
+
+    /**
+     * Inserts a list of {@link IngredientEntry} into the ingredient table.
+     *
+     * @param ingredients A list of ingredients to insert
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void bulkInsert(IngredientEntry... ingredients);
+
+    @Query("SELECT * FROM ingredient")
+    LiveData<List<IngredientEntry>> getIngredientList();
+
+    @Query("DELETE FROM ingredient")
+    void deleteIngredientList();
+
 }

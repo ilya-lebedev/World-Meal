@@ -16,5 +16,33 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
+/**
+ * AreaDao is the {@link Dao} which provides an api
+ * for data operations with area table
+ */
+@Dao
 public interface AreaDao {
+
+    /**
+     * Inserts a list of {@link AreaEntry} into the area table.
+     *
+     * @param areas A list of areas to insert
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void bulkInsert(AreaEntry... areas);
+
+    @Query("SELECT * FROM area")
+    LiveData<List<AreaEntry>> getAreaList();
+
+    @Query("DELETE FROM area")
+    void deleteAreaList();
+
 }

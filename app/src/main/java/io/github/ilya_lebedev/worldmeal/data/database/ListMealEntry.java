@@ -16,11 +16,16 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * ListMealEntry
  */
+@Entity(tableName = "list_meal")
 public class ListMealEntry {
 
+    @PrimaryKey
     private long id;
     private String name;
     private String thumbnail;

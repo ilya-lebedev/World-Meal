@@ -17,6 +17,7 @@
 package io.github.ilya_lebedev.worldmeal.data.database;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -57,6 +58,7 @@ public class MealIngredientEntry {
      * @param measure Meal ingredient measure
      * @param mealId Meal ingredient meal id
      */
+    @Ignore
     public MealIngredientEntry(int indexNumber, String name, String measure, long mealId) {
         this.indexNumber = indexNumber;
         this.name = name;

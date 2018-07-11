@@ -16,5 +16,33 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
+/**
+ * CategoryDao is the {@link Dao} which provides an api
+ * for data operations with category table
+ */
+@Dao
 public interface CategoryDao {
+
+    /**
+     * Inserts a list of {@link CategoryEntry} into the category table.
+     *
+     * @param categories A list of categories to insert
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void bulkInsert(CategoryEntry... categories);
+
+    @Query("SELECT * FROM category")
+    LiveData<List<CategoryEntry>> getCategoryList();
+
+    @Query("DELETE FROM category")
+    void deleteCategoryList();
+
 }

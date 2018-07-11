@@ -16,5 +16,100 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+/**
+ * MealEntry
+ */
+@Entity(tableName = "meal")
 public class MealEntry {
+
+    @PrimaryKey
+    private long id;
+    private String name;
+    private String category;
+    private String area;
+    private String instructions;
+    private String thumbnail;
+    private String youtubeUrl;
+
+    /**
+     * This constructor is used by Room to create MealEntries and by MealDbJsonParser.
+     *
+     * @param id Meal id
+     * @param name Meal name
+     * @param category Meal category
+     * @param area Meal area
+     * @param instructions Meal instructions
+     * @param thumbnail Meal thumbnail
+     * @param youtubeUrl Meal youtube video url
+     */
+    public MealEntry(long id, String name, String category, String area, String instructions,
+                     String thumbnail, String youtubeUrl) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.area = area;
+        this.instructions = instructions;
+        this.thumbnail = thumbnail;
+        this.youtubeUrl = youtubeUrl;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getYoutubeUrl() {
+        return youtubeUrl;
+    }
+
+    public void setYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
+
 }

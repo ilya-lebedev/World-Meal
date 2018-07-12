@@ -17,7 +17,7 @@
 package io.github.ilya_lebedev.worldmeal.data.database;
 
 /**
- * ListMealDao
+ * AreaListMealDao
  */
-public interface ListMealDao {
+public interface AreaListMealDao {
 }

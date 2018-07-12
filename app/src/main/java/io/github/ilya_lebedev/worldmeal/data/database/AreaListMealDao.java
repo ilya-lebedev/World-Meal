@@ -16,8 +16,30 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
 /**
  * AreaListMealDao
  */
+@Dao
 public interface AreaListMealDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void bulkInsert(AreaListMealEntry... areaMeals);
+
+    @Query("SELECT * FROM area_list_meal WHERE area == :area")
+    LiveData<List<AreaListMealEntry>> getAreaListMeal(String area);
+
+    @Query("DELETE FROM area_list_meal WHERE area == :area")
+    void deleteAreaListMealByArea(String area);
+
+    @Query("DELETE FROM area_list_meal")
+    void deleteAllAreaListMeal();
+
 }

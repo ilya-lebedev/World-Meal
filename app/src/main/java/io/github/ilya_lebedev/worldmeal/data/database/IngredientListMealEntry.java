@@ -16,5 +16,65 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+/**
+ * IngredientListMealEntry
+ */
+@Entity(tableName = "ingredient_list_meal")
 public class IngredientListMealEntry {
+
+    @PrimaryKey
+    private long id;
+    private String name;
+    private String thumbnail;
+    private String ingredient;
+
+    /**
+     * This constructor is used by Room to create AreaListMealEntry and by MealDbJsonParser.
+     *
+     * @param id List meal id
+     * @param name List meal name
+     * @param thumbnail List meal thumbnail
+     * @param ingredient List meal ingredient
+     */
+    public IngredientListMealEntry(long id, String name, String thumbnail, String ingredient) {
+        this.id = id;
+        this.name = name;
+        this.thumbnail = thumbnail;
+        this.ingredient = ingredient;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
+    }
 }

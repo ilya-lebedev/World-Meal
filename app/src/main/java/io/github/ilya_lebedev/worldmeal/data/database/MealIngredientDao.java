@@ -16,5 +16,30 @@
 
 package io.github.ilya_lebedev.worldmeal.data.database;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
+/**
+ * MealIngredientDao
+ */
+@Dao
 public interface MealIngredientDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void bulkInsert(MealIngredientEntry... mealIngredients);
+
+    @Query("SELECT * FROM meal_ingredient WHERE mealId == :mealId")
+    LiveData<List<MealIngredientEntry>> getMealIngredientList(long mealId);
+
+    @Query("DELETE FROM meal_ingredient WHERE mealId == :mealId")
+    void deleteMealIngredientById(long mealId);
+
+    @Query("DELETE FROM meal_ingredient")
+    void deleteAllMealIngredient();
+
 }

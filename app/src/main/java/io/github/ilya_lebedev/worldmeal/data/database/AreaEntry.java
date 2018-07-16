@@ -41,6 +41,15 @@ public class AreaEntry {
         this.name = name;
     }
 
+    /**
+     * This constructor is used by MealDbJsonParser.
+     *
+     * @param name Area name
+     */
+    public AreaEntry(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

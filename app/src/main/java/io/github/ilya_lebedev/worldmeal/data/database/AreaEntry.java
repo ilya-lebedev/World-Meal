@@ -17,15 +17,16 @@
 package io.github.ilya_lebedev.worldmeal.data.database;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
  * AreaEntry
  */
-@Entity(tableName = "area")
+@Entity(tableName = "area", indices = {@Index(value = {"name"}, unique = true)})
 public class AreaEntry {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
 

@@ -16,8 +16,24 @@
 
 package io.github.ilya_lebedev.worldmeal.data.network.response;
 
+import android.support.annotation.NonNull;
+
+import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+
 /**
  * Response from the backend. Contains the area list.
  */
 public class AreaListResponse {
+
+    @NonNull
+    private final AreaEntry[] mAreaList;
+
+    public AreaListResponse(@NonNull final AreaEntry[] areaList) {
+        mAreaList = areaList;
+    }
+
+    public AreaEntry[] getAreaList() {
+        return mAreaList;
+    }
+
 }

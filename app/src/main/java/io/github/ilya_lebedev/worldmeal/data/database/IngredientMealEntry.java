@@ -20,30 +20,30 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
- * AreaListMealEntry
+ * IngredientListMealEntry
  */
-@Entity(tableName = "area_list_meal")
-public class AreaListMealEntry {
+@Entity(tableName = "ingredient_list_meal")
+public class IngredientListMealEntry {
 
     @PrimaryKey
     private long id;
     private String name;
     private String thumbnail;
-    private String area;
+    private String ingredient;
 
     /**
-     * This constructor is used by Room to create AreaListMealEntry and by MealDbJsonParser.
+     * This constructor is used by Room to create AreaMealEntry and by MealDbJsonParser.
      *
      * @param id List meal id
      * @param name List meal name
      * @param thumbnail List meal thumbnail
-     * @param area List meal area
+     * @param ingredient List meal ingredient
      */
-    public AreaListMealEntry(long id, String name, String thumbnail, String area) {
+    public IngredientListMealEntry(long id, String name, String thumbnail, String ingredient) {
         this.id = id;
         this.name = name;
         this.thumbnail = thumbnail;
-        this.area = area;
+        this.ingredient = ingredient;
     }
 
     public long getId() {
@@ -70,12 +70,11 @@ public class AreaListMealEntry {
         this.thumbnail = thumbnail;
     }
 
-    public String getArea() {
-        return area;
+    public String getIngredient() {
+        return ingredient;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
     }
-
 }

@@ -32,7 +32,7 @@ public class CategoryListMealEntry {
     private String category;
 
     /**
-     * This constructor is used by Room to create AreaListMealEntry and by MealDbJsonParser.
+     * This constructor is used by Room to create AreaMealEntry and by MealDbJsonParser.
      *
      * @param id List meal id
      * @param name List meal name

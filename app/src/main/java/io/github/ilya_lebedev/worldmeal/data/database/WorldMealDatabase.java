@@ -27,11 +27,11 @@ import android.content.Context;
 @Database(entities =
         {
                 AreaEntry.class,
-                AreaListMealEntry.class,
+                AreaMealEntry.class,
                 CategoryEntry.class,
-                CategoryListMealEntry.class,
+                CategoryMealEntry.class,
                 IngredientEntry.class,
-                IngredientListMealEntry.class,
+                IngredientMealEntry.class,
                 MealEntry.class,
                 MealIngredientEntry.class
         },
@@ -44,15 +44,8 @@ public abstract class WorldMealDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
     private static volatile WorldMealDatabase sInstance;
 
-    // DAOs
-    public abstract AreaDao areaDao();
-    public abstract AreaListMealDao areaListMealDao();
-    public abstract CategoryDao categoryDao();
-    public abstract CategoryListMealDao categoryListMealDao();
-    public abstract IngredientDao ingredientDao();
-    public abstract IngredientListMealDao ingredientListMealDao();
-    public abstract MealDao mealDao();
-    public abstract MealIngredientDao mealIngredientDao();
+    // DAO
+    public abstract WorldMealDao worldMealDao();
 
     public static WorldMealDatabase getInstance(Context context) {
         if (sInstance == null) {

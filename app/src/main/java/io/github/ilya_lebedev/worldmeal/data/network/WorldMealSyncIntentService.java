@@ -31,6 +31,7 @@ public class WorldMealSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        WorldMealFetchUtils.fetch(this, intent);
     }
 
 }

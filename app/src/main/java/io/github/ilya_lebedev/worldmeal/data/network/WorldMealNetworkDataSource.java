@@ -63,6 +63,7 @@ public class WorldMealNetworkDataSource {
     }
 
     public void startFetchAreaList() {
+        WorldMealFetchUtils.startFetchAreaList(mContext);
     }
 
     public void fetchAreaList() {

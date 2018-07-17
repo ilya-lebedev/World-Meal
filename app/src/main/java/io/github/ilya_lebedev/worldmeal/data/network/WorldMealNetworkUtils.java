@@ -35,8 +35,28 @@ public class WorldMealNetworkUtils {
 
     private static final String SCANNER_DELIMITER = "\\A";
 
+    private static final String MEAL_DB_BASE_URL = "https://www.themealdb.com/api/json/v1";
+
+    private static final String API_KEY_PATH = "1"; // TODO BuildConfig
+
+    private static final String LIST_PATH = "list.php";
+
+    private static final String AREA_PARAM = "a";
+
+    private static final String LIST_VALUE = "list";
+
     /* This is utility class and we don't need to instantiate it */
     private WorldMealNetworkUtils() {}
+
+    static URL getAreaListUrl() {
+        Uri areaListUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
+                .appendPath(API_KEY_PATH)
+                .appendPath(LIST_PATH)
+                .appendQueryParameter(AREA_PARAM, LIST_VALUE)
+                .build();
+
+        return buildUrlFromUri(areaListUri);
+    }
 
     /**
      * This method returns the entire result from the HTTP response.

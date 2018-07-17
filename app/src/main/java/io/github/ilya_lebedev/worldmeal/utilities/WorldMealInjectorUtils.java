@@ -38,4 +38,13 @@ public class WorldMealInjectorUtils {
         return WorldMealRepository.getInstance(database.worldMealDao(), networkDataSource, appExecutors);
     }
 
+    public static WorldMealNetworkDataSource provideNetworkDataSource(Context context) {
+        // This call to provide repository is necessary if the app starts from a service - in this
+        // case the repository will not exist unless it is specifically created.
+        provideRepository(context.getApplicationContext());
+        AppExecutors appExecutors = AppExecutors.getInstance();
+
+        return WorldMealNetworkDataSource.getInstance(context.getApplicationContext(), appExecutors);
+    }
+
 }

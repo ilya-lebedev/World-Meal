@@ -18,6 +18,11 @@
         </activity>
         <activity android:name=".ui.detail.MealRecipeDetailActivity" />
         <activity android:name=".ui.list.MealListActivity"></activity>
+
+        <service
+            android:name=".data.network.WorldMealSyncIntentService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

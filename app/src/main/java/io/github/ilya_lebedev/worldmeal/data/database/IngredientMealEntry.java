@@ -20,10 +20,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
- * IngredientListMealEntry
+ * IngredientMealEntry
  */
-@Entity(tableName = "ingredient_list_meal")
-public class IngredientListMealEntry {
+@Entity(tableName = "ingredient_meal")
+public class IngredientMealEntry {
 
     @PrimaryKey
     private long id;
@@ -39,7 +39,7 @@ public class IngredientListMealEntry {
      * @param thumbnail List meal thumbnail
      * @param ingredient List meal ingredient
      */
-    public IngredientListMealEntry(long id, String name, String thumbnail, String ingredient) {
+    public IngredientMealEntry(long id, String name, String thumbnail, String ingredient) {
         this.id = id;
         this.name = name;
         this.thumbnail = thumbnail;

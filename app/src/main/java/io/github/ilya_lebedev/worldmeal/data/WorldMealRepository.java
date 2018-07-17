@@ -16,5 +16,87 @@
 
 package io.github.ilya_lebedev.worldmeal.data;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
+
+import java.util.List;
+
+import io.github.ilya_lebedev.worldmeal.AppExecutors;
+import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDao;
+import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
+
+/**
+ * WorldMealRepository
+ */
 public class WorldMealRepository {
+
+    // For singleton instantiation
+    private static final Object LOCK = new Object();
+    private static WorldMealRepository sInstance;
+
+    private final WorldMealDao mWorldMealDao;
+    private final WorldMealNetworkDataSource mNetworkDataSource;
+    private final AppExecutors mAppExecutors;
+
+    private WorldMealRepository(WorldMealDao worldMealDao,
+                                WorldMealNetworkDataSource networkDataSource,
+                                AppExecutors appExecutors) {
+        mWorldMealDao = worldMealDao;
+        mNetworkDataSource = networkDataSource;
+        mAppExecutors = appExecutors;
+
+        initializeNetworkDataObservers();
+    }
+
+    private void initializeNetworkDataObservers() {
+        LiveData<AreaEntry[]> networkAreaListData = mNetworkDataSource.getCurrentAreaList();
+        networkAreaListData.observeForever(new Observer<AreaEntry[]>() {
+            @Override
+            public void onChanged(@Nullable final AreaEntry[] areaEntries) {
+                mAppExecutors.diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWorldMealDao.bulkInsert(areaEntries);
+                    }
+                });
+            }
+        });
+    }
+
+    public static WorldMealRepository getInstance(WorldMealDao worldMealDao,
+                                           WorldMealNetworkDataSource networkDataSource,
+                                           AppExecutors appExecutors) {
+        if (sInstance == null) {
+            synchronized (LOCK) {
+                sInstance = new WorldMealRepository(worldMealDao, networkDataSource, appExecutors);
+            }
+        }
+
+        return sInstance;
+    }
+
+    public LiveData<List<AreaEntry>> getAreaList() {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (isAreaListFetchNeeded()) {
+                    startFetchAreaList();
+                }
+            }
+        });
+
+        return mWorldMealDao.getAreaList();
+    }
+
+    private boolean isAreaListFetchNeeded() {
+        int areaCount = mWorldMealDao.countAllArea();
+        return (areaCount > 0);
+    }
+
+    private void startFetchAreaList() {
+        mNetworkDataSource.startFetchAreaList();
+    }
+
 }

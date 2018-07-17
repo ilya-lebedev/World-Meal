@@ -16,9 +16,26 @@
 
 package io.github.ilya_lebedev.worldmeal.utilities;
 
+import android.content.Context;
+
+import io.github.ilya_lebedev.worldmeal.AppExecutors;
+import io.github.ilya_lebedev.worldmeal.data.WorldMealRepository;
+import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDatabase;
+import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
+
 /**
  * WorldMealInjectorUtils provides static methods to inject
  * the various classes needed for WorldMeal app
  */
 public class WorldMealInjectorUtils {
+
+    public static WorldMealRepository provideRepository(Context context) {
+        WorldMealDatabase database = WorldMealDatabase.getInstance(context.getApplicationContext());
+        AppExecutors appExecutors = AppExecutors.getInstance();
+        WorldMealNetworkDataSource networkDataSource =
+                WorldMealNetworkDataSource.getInstance(context.getApplicationContext(), appExecutors);
+
+        return WorldMealRepository.getInstance(database.worldMealDao(), networkDataSource, appExecutors);
+    }
+
 }

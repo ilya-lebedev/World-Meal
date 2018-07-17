@@ -32,7 +32,7 @@ public class MealDbJsonParser {
     private static final String MDB_STR_AREA = "strArea";
 
     @Nullable
-    AreaListResponse parseAreaList(final String areaListJsonStr) throws JSONException {
+    static AreaListResponse parseAreaList(final String areaListJsonStr) throws JSONException {
         JSONObject areaListJson = new JSONObject(areaListJsonStr);
 
         AreaEntry[] areaEntries = areaListFromJson(areaListJson);

@@ -33,4 +33,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="ClassificationTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/ClassificationTabTextAppearance</item>
+    </style>
+
+    <style name="ClassificationTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
 </resources>

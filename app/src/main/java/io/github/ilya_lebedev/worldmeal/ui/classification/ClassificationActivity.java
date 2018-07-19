@@ -16,8 +16,11 @@
 
 package io.github.ilya_lebedev.worldmeal.ui.classification;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import io.github.ilya_lebedev.worldmeal.R;
 
@@ -26,10 +29,24 @@ import io.github.ilya_lebedev.worldmeal.R;
  */
 public class ClassificationActivity extends AppCompatActivity {
 
+    private ClassificationPagerAdapter mPagerAdapter;
+    private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classification);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mPagerAdapter = new ClassificationPagerAdapter(getSupportFragmentManager());
+        mViewPager = findViewById(R.id.viewpager);
+        mViewPager.setAdapter(mPagerAdapter);
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = findViewById(R.id.tablayout);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
 }

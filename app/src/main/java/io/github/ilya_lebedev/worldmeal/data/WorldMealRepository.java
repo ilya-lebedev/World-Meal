@@ -92,7 +92,7 @@ public class WorldMealRepository {
 
     private boolean isAreaListFetchNeeded() {
         int areaCount = mWorldMealDao.countAllArea();
-        return (areaCount > 0);
+        return (areaCount == 0);
     }
 
     private void startFetchAreaList() {

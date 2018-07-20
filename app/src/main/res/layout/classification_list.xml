@@ -21,7 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/classification_list_padding"
-    tools:context="io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaListFragment">
+    tools:context=".ui.classification.ClassificationFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_classification"

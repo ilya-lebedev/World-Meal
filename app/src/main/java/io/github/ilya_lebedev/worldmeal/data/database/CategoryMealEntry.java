@@ -23,7 +23,7 @@ import android.arch.persistence.room.PrimaryKey;
  * CategoryMealEntry
  */
 @Entity(tableName = "category_meal")
-public class CategoryMealEntry {
+public class CategoryMealEntry extends ClassificationMealEntry {
 
     @PrimaryKey
     private long id;
@@ -46,6 +46,7 @@ public class CategoryMealEntry {
         this.category = category;
     }
 
+    @Override
     public long getId() {
         return id;
     }
@@ -54,6 +55,7 @@ public class CategoryMealEntry {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -62,6 +64,7 @@ public class CategoryMealEntry {
         this.name = name;
     }
 
+    @Override
     public String getThumbnail() {
         return thumbnail;
     }
@@ -77,4 +80,5 @@ public class CategoryMealEntry {
     public void setCategory(String category) {
         this.category = category;
     }
+
 }

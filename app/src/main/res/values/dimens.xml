@@ -29,4 +29,8 @@
     <dimen name="list_item_classification_margin_horizontal">32dp</dimen>
     <dimen name="list_item_classification_text_size">32sp</dimen>
 
+    <dimen name="list_item_classification_meal_margin">8dp</dimen>
+    <dimen name="list_item_classification_meal_image_margin">16dp</dimen>
+    <dimen name="list_item_classification_meal_text_margin">16dp</dimen>
+
 </resources>

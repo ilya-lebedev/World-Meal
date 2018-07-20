@@ -42,6 +42,8 @@ public class WorldMealNetworkUtils {
     private static final String LIST_PATH = "list.php";
 
     private static final String AREA_PARAM = "a";
+    private static final String CATEGORY_PARAM = "c";
+    private static final String INGREDIENT_PARAM = "i";
 
     private static final String LIST_VALUE = "list";
 
@@ -56,6 +58,16 @@ public class WorldMealNetworkUtils {
                 .build();
 
         return buildUrlFromUri(areaListUri);
+    }
+
+    static URL getCategoryListUrl() {
+        Uri categoryListUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
+                .appendPath(API_KEY_PATH)
+                .appendPath(LIST_PATH)
+                .appendQueryParameter(CATEGORY_PARAM, LIST_VALUE)
+                .build();
+
+        return buildUrlFromUri(categoryListUri);
     }
 
     /**

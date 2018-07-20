@@ -24,6 +24,7 @@ import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.AppExecutors;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDao;
 import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
 
@@ -63,6 +64,19 @@ public class WorldMealRepository {
                 });
             }
         });
+
+        LiveData<CategoryEntry[]> networkCategoryListData = mNetworkDataSource.getCurrentCategoryList();
+        networkCategoryListData.observeForever(new Observer<CategoryEntry[]>() {
+            @Override
+            public void onChanged(@Nullable final CategoryEntry[] categoryEntries) {
+                mAppExecutors.diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWorldMealDao.bulkInsert(categoryEntries);
+                    }
+                });
+            }
+        });
     }
 
     public static WorldMealRepository getInstance(WorldMealDao worldMealDao,
@@ -90,13 +104,35 @@ public class WorldMealRepository {
         return mWorldMealDao.getAreaList();
     }
 
+    public LiveData<List<CategoryEntry>> getCategoryList() {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (isCategoryListFetchNeeded()) {
+                    startFetchCategoryList();
+                }
+            }
+        });
+
+        return mWorldMealDao.getCategoryList();
+    }
+
     private boolean isAreaListFetchNeeded() {
         int areaCount = mWorldMealDao.countAllArea();
         return (areaCount == 0);
     }
 
+    private boolean isCategoryListFetchNeeded() {
+        int categoryCount = mWorldMealDao.countAllCategory();
+        return (categoryCount ==0);
+    }
+
     private void startFetchAreaList() {
         mNetworkDataSource.startFetchAreaList();
+    }
+
+    private void startFetchCategoryList() {
+        mNetworkDataSource.startFetchCategoryList();
     }
 
 }

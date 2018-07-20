@@ -32,8 +32,11 @@ import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.R;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaListViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryListViewModel;
+import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
 /**
@@ -104,7 +107,21 @@ public class ClassificationFragment extends Fragment
             }
 
             case CLASSIFICATION_TYPE_CATEGORY: {
-                // TODO
+                CategoryViewModelFactory factory = WorldMealInjectorUtils
+                        .provideCategoryViewModelFactory(getContext().getApplicationContext());
+                CategoryListViewModel viewModel =
+                        ViewModelProviders.of(this, factory).get(CategoryListViewModel.class);
+                viewModel.getCategoryList().observe(this, new Observer<List<CategoryEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<CategoryEntry> categoryEntries) {
+                        mListAdapter.swapClassificationEntries(categoryEntries);
+                        if (categoryEntries != null && categoryEntries.size() != 0) {
+                            showDataView();
+                        } else {
+                            showLoading();
+                        }
+                    }
+                });
 
                 break;
             }

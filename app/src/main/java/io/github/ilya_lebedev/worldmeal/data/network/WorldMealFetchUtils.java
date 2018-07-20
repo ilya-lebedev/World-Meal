@@ -26,6 +26,8 @@ import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
  */
 public class WorldMealFetchUtils {
 
+    public static final String TAG = "WorldMealFetchUtils";
+
     public static final String ACTION_FETCH_AREA_LIST = "fetch_area_list";
     public static final String ACTION_FETCH_CATEGORY_LIST = "fetch_category_list";
 
@@ -36,6 +38,8 @@ public class WorldMealFetchUtils {
 
         if (ACTION_FETCH_AREA_LIST.equals(action)) {
             networkDataSource.fetchAreaList();
+        } else if (ACTION_FETCH_CATEGORY_LIST.equals(action)) {
+            networkDataSource.fetchCategoryList();
         } else {
             throw new IllegalArgumentException("Unsupported action: " + action);
         }
@@ -45,6 +49,13 @@ public class WorldMealFetchUtils {
         Intent fetchIntent = new Intent(context.getApplicationContext(),
                 WorldMealSyncIntentService.class);
         fetchIntent.setAction(ACTION_FETCH_AREA_LIST);
+        context.startService(fetchIntent);
+    }
+
+    public static void startFetchCategoryList(Context context) {
+        Intent fetchIntent = new Intent(context.getApplicationContext(),
+                WorldMealSyncIntentService.class);
+        fetchIntent.setAction(ACTION_FETCH_CATEGORY_LIST);
         context.startService(fetchIntent);
     }
 

@@ -17,15 +17,17 @@
 package io.github.ilya_lebedev.worldmeal.data.database;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
  * CategoryEntry
  */
-@Entity(tableName = "category")
+@Entity(tableName = "category", indices = {@Index(value = {"name"}, unique = true)})
 public class CategoryEntry extends ClassificationEntry {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
 
@@ -37,6 +39,16 @@ public class CategoryEntry extends ClassificationEntry {
      */
     public CategoryEntry(int id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    /**
+     * This constructor is used by MealDbJsonParser.
+     *
+     * @param name Category name
+     */
+    @Ignore
+    public CategoryEntry(String name) {
         this.name = name;
     }
 

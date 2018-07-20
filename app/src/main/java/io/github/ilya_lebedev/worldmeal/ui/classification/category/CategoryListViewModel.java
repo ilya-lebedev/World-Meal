@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-package io.github.ilya_lebedev.worldmeal.data.network.response;
+package io.github.ilya_lebedev.worldmeal.ui.classification.category;
 
-import android.support.annotation.NonNull;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 
+import java.util.List;
+
+import io.github.ilya_lebedev.worldmeal.data.WorldMealRepository;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 
 /**
- * Response from the backend. Contains the category list.
+ * CategoryListViewModel
  */
-public class CategoryListResponse {
+public class CategoryListViewModel extends ViewModel {
 
-    @NonNull
-    private final CategoryEntry[] mCategoryList;
+    private final LiveData<List<CategoryEntry>> mCategoryList;
+    private final WorldMealRepository mRepository;
 
-    public CategoryListResponse(@NonNull final CategoryEntry[] categoryList) {
-        mCategoryList = categoryList;
+    public CategoryListViewModel(WorldMealRepository repository) {
+        mRepository = repository;
+        mCategoryList = repository.getCategoryList();
     }
 
-    public CategoryEntry[] getCategoryList() {
+    public LiveData<List<CategoryEntry>> getCategoryList() {
         return mCategoryList;
     }
 

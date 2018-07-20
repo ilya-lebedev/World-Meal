@@ -23,13 +23,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 
 public class MealDbJsonParser {
 
     private static final String MDB_MEALS = "meals";
 
     private static final String MDB_STR_AREA = "strArea";
+
+    private static final String MDB_STR_CATEGORY = "strCategory";
 
     @Nullable
     static AreaListResponse parseAreaList(final String areaListJsonStr) throws JSONException {
@@ -38,6 +42,15 @@ public class MealDbJsonParser {
         AreaEntry[] areaEntries = areaListFromJson(areaListJson);
 
         return new AreaListResponse(areaEntries);
+    }
+
+    @Nullable
+    static CategoryListResponse parseCategoryList(final String categoryListJsonStr) throws JSONException{
+        JSONObject categoryListJson = new JSONObject(categoryListJsonStr);
+
+        CategoryEntry[] categoryEntries = categoryListFromJson(categoryListJson);
+
+        return new CategoryListResponse(categoryEntries);
     }
 
     private static AreaEntry[] areaListFromJson(final JSONObject areaListJson) throws JSONException {
@@ -60,6 +73,28 @@ public class MealDbJsonParser {
         String areaName = areaJson.getString(MDB_STR_AREA);
 
         return new AreaEntry(areaName);
+    }
+
+    private static CategoryEntry[] categoryListFromJson(final JSONObject categoryListJson) throws JSONException {
+        JSONArray categoryJsonArray = categoryListJson.getJSONArray(MDB_MEALS);
+
+        CategoryEntry[] categoryEntries = new CategoryEntry[categoryJsonArray.length()];
+
+        for (int i = 0; i < categoryJsonArray.length(); i++) {
+            JSONObject categoryJson = categoryJsonArray.getJSONObject(i);
+
+            CategoryEntry category = categoryEntryFromJson(categoryJson);
+
+            categoryEntries[i] = category;
+        }
+
+        return categoryEntries;
+    }
+
+    private static CategoryEntry categoryEntryFromJson(final JSONObject categoryJson) throws JSONException {
+        String categoryName = categoryJson.getString(MDB_STR_CATEGORY);
+
+        return new CategoryEntry(categoryName);
     }
 
 }

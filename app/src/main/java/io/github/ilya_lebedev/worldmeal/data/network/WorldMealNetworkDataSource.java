@@ -24,13 +24,17 @@ import java.net.URL;
 
 import io.github.ilya_lebedev.worldmeal.AppExecutors;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 
 /**
  * WorldMealNetworkDataSource
  * Provides an API for doing all operations with the server data
  */
 public class WorldMealNetworkDataSource {
+
+    private static final String TAG = "WorldMealNetworkDataSrc";
 
     // For singleton instantiation
     private static final Object LOCK = new Object();
@@ -40,12 +44,14 @@ public class WorldMealNetworkDataSource {
     private final AppExecutors mExecutors;
 
     private final MutableLiveData<AreaEntry[]> mDownloadedAreaEntry;
+    private final MutableLiveData<CategoryEntry[]> mDownloadedCategoryEntry;
 
     private WorldMealNetworkDataSource(Context context, AppExecutors appExecutors) {
         mContext = context;
         mExecutors = appExecutors;
 
         mDownloadedAreaEntry = new MutableLiveData<>();
+        mDownloadedCategoryEntry = new MutableLiveData<>();
     }
 
     public static WorldMealNetworkDataSource getInstance(Context context, AppExecutors appExecutors) {
@@ -62,8 +68,16 @@ public class WorldMealNetworkDataSource {
         return mDownloadedAreaEntry;
     }
 
+    public LiveData<CategoryEntry[]> getCurrentCategoryList() {
+        return mDownloadedCategoryEntry;
+    }
+
     public void startFetchAreaList() {
         WorldMealFetchUtils.startFetchAreaList(mContext);
+    }
+
+    public void startFetchCategoryList() {
+        WorldMealFetchUtils.startFetchCategoryList(mContext);
     }
 
     public void fetchAreaList() {
@@ -90,11 +104,25 @@ public class WorldMealNetworkDataSource {
     }
 
     void fetchCategoryList() {
-        // TODO
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                // TODO
+                try {
+                    URL categoryListRequestUrl = WorldMealNetworkUtils.getCategoryListUrl();
+
+                    String jsonCategoryListResponse = WorldMealNetworkUtils
+                            .getResponseFromHttpUrl(categoryListRequestUrl);
+
+                    CategoryListResponse response = MealDbJsonParser
+                            .parseCategoryList(jsonCategoryListResponse);
+
+                    if (response != null && response.getCategoryList().length != 0) {
+                        mDownloadedCategoryEntry.postValue(response.getCategoryList());
+                    }
+                } catch (Exception e) {
+                    // Server probably invalid
+                    e.printStackTrace();
+                }
             }
         });
     }

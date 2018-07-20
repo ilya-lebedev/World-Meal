@@ -1,53 +1,73 @@
+/*
+ * Copyright (C) 2018 Ilya Lebedev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.ilya_lebedev.worldmeal.ui.classification;
 
-import android.content.Context;
-import android.net.Uri;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.R;
+import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaListViewModel;
+import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ClassificationFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ClassificationFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * ClassificationFragment
  */
-public class ClassificationFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class ClassificationFragment extends Fragment
+        implements ClassificationListAdapter.ClassificationListAdapterOnClickHandler {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_CLASSIFICATION_TYPE = "";
+    public static final int CLASSIFICATION_TYPE_AREA = 1;
+    public static final int CLASSIFICATION_TYPE_CATEGORY = 2;
+    public static final int CLASSIFICATION_TYPE_INGREDIENT = 3;
 
-    private OnFragmentInteractionListener mListener;
+    private RecyclerView mRecyclerView;
+    private ProgressBar mLoadingIndicator;
+
+    private ClassificationListAdapter mListAdapter;
+
+    private int mClassificationType;
 
     public ClassificationFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Used to create a new instance of this fragment.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param classificationType area, category or ingredient
      * @return A new instance of fragment ClassificationFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static ClassificationFragment newInstance(String param1, String param2) {
+    public static ClassificationFragment newInstance(int classificationType) {
         ClassificationFragment fragment = new ClassificationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_CLASSIFICATION_TYPE, classificationType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,54 +76,101 @@ public class ClassificationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mClassificationType = getArguments().getInt(ARG_CLASSIFICATION_TYPE);
         }
     }
+
+    private void initializeData() {
+        switch (mClassificationType) {
+
+            case CLASSIFICATION_TYPE_AREA: {
+                AreaViewModelFactory factory = WorldMealInjectorUtils
+                        .provideAreaViewModelFactory(getContext().getApplicationContext());
+                AreaListViewModel viewModel =
+                        ViewModelProviders.of(this, factory).get(AreaListViewModel.class);
+                viewModel.getAreaList().observe(this, new Observer<List<AreaEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<AreaEntry> areaEntries) {
+                        mListAdapter.swapClassificationEntries(areaEntries);
+                        if (areaEntries != null && areaEntries.size() != 0) {
+                            showDataView();
+                        } else {
+                            showLoading();
+                        }
+                    }
+                });
+
+                break;
+            }
+
+            case CLASSIFICATION_TYPE_CATEGORY: {
+                // TODO
+
+                break;
+            }
+
+            case CLASSIFICATION_TYPE_INGREDIENT: {
+                // TODO
+
+                break;
+            }
+
+            default:
+                throw new IllegalArgumentException("Unsupported classification type "
+                        + mClassificationType);
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_classification, container, false);
-    }
+        View view = inflater.inflate(R.layout.classification_list, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        mRecyclerView = view.findViewById(R.id.rv_classification);
+        mLoadingIndicator = view.findViewById(R.id.pb_loading_indicator);
+
+        mListAdapter = new ClassificationListAdapter(getContext(), this);
+
+        final GridLayoutManager layoutManager = new GridLayoutManager(
+                getContext(),
+                getResources().getInteger(R.integer.classification_grid_span_count));
+
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setAdapter(mListAdapter);
+        showLoading();
+
+        initializeData();
+
+        return view;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onClick(String classificationEntryName) {
+        // TODO
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Make the View for the data visible and hide the loading indicator.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void showDataView() {
+        // Hide the loading indicator
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        // Show the data
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
+
+    /**
+     * Make the loading indicator visible and hide the data view.
+     */
+    private void showLoading() {
+        // Hide the data
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        // Show the loading indicator
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+    }
+
 }

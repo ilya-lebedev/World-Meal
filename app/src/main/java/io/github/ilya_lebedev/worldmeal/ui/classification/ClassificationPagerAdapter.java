@@ -20,8 +20,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaListFragment;
-
 /**
  * ClassificationPagerAdapter
  */
@@ -37,7 +35,8 @@ public class ClassificationPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return AreaListFragment.newInstance();
+                return ClassificationFragment
+                        .newInstance(ClassificationFragment.CLASSIFICATION_TYPE_AREA);
             default:
                 throw new IllegalArgumentException("There is no item for position " + position);
         }

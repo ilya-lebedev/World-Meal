@@ -25,7 +25,7 @@ import android.arch.persistence.room.PrimaryKey;
  * AreaEntry
  */
 @Entity(tableName = "area", indices = {@Index(value = {"name"}, unique = true)})
-public class AreaEntry {
+public class AreaEntry extends ClassificationEntry {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -52,6 +52,7 @@ public class AreaEntry {
         this.name = name;
     }
 
+    @Override
     public int getId() {
         return id;
     }
@@ -60,6 +61,7 @@ public class AreaEntry {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -23,14 +23,14 @@ import android.arch.persistence.room.PrimaryKey;
  * CategoryEntry
  */
 @Entity(tableName = "category")
-public class CategoryEntry {
+public class CategoryEntry extends ClassificationEntry {
 
     @PrimaryKey
     private int id;
     private String name;
 
     /**
-     * This constructor is used by Room to create CategoryEntries and by MealDbJsonParser.
+     * This constructor is used by Room to create CategoryEntries .
      *
      * @param id Category id
      * @param name Category name
@@ -40,6 +40,7 @@ public class CategoryEntry {
         this.name = name;
     }
 
+    @Override
     public int getId() {
         return id;
     }
@@ -48,6 +49,7 @@ public class CategoryEntry {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

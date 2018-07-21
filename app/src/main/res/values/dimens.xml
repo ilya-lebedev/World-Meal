@@ -33,4 +33,6 @@
     <dimen name="list_item_classification_meal_image_margin">16dp</dimen>
     <dimen name="list_item_classification_meal_text_margin">16dp</dimen>
 
+    <integer name="meal_grid_span_count">1</integer>
+
 </resources>

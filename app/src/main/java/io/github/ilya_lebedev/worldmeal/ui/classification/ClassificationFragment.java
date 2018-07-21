@@ -45,7 +45,7 @@ import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 public class ClassificationFragment extends Fragment
         implements ClassificationListAdapter.ClassificationListAdapterOnClickHandler {
 
-    private static final String ARG_CLASSIFICATION_TYPE = "";
+    private static final String ARG_CLASSIFICATION_TYPE = "classification_type";
     public static final int CLASSIFICATION_TYPE_AREA = 1;
     public static final int CLASSIFICATION_TYPE_CATEGORY = 2;
     public static final int CLASSIFICATION_TYPE_INGREDIENT = 3;

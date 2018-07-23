@@ -24,8 +24,10 @@ import java.net.URL;
 
 import io.github.ilya_lebedev.worldmeal.AppExecutors;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 
 /**
@@ -45,6 +47,7 @@ public class WorldMealNetworkDataSource {
 
     private final MutableLiveData<AreaEntry[]> mDownloadedAreaEntry;
     private final MutableLiveData<CategoryEntry[]> mDownloadedCategoryEntry;
+    private final MutableLiveData<AreaMealEntry[]> mDownloadedAreaMealEntry;
 
     private WorldMealNetworkDataSource(Context context, AppExecutors appExecutors) {
         mContext = context;
@@ -52,6 +55,7 @@ public class WorldMealNetworkDataSource {
 
         mDownloadedAreaEntry = new MutableLiveData<>();
         mDownloadedCategoryEntry = new MutableLiveData<>();
+        mDownloadedAreaMealEntry = new MutableLiveData<>();
     }
 
     public static WorldMealNetworkDataSource getInstance(Context context, AppExecutors appExecutors) {
@@ -72,12 +76,20 @@ public class WorldMealNetworkDataSource {
         return mDownloadedCategoryEntry;
     }
 
+    public LiveData<AreaMealEntry[]> getCurrentAreaMealList() {
+        return mDownloadedAreaMealEntry;
+    }
+
     public void startFetchAreaList() {
         WorldMealFetchUtils.startFetchAreaList(mContext);
     }
 
     public void startFetchCategoryList() {
         WorldMealFetchUtils.startFetchCategoryList(mContext);
+    }
+
+    public void startFetchAreaMealList(String areaName) {
+        WorldMealFetchUtils.startFetchAreaMealList(mContext, areaName);
     }
 
     public void fetchAreaList() {
@@ -137,12 +149,26 @@ public class WorldMealNetworkDataSource {
         });
     }
 
-    void fetchAreaMealList(String areaName) {
-        // TODO
+    void fetchAreaMealList(final String areaName) {
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                // TODO
+                try {
+                    URL areaMealRequestUrl = WorldMealNetworkUtils.getAreaMealUrl(areaName);
+
+                    String jsonAreaMealResponse = WorldMealNetworkUtils
+                            .getResponseFromHttpUrl(areaMealRequestUrl);
+
+                    AreaMealResponse response = MealDbJsonParser
+                            .paresAreaMealList(jsonAreaMealResponse, areaName);
+
+                    if (response != null && response.getAreaMeal().length != 0) {
+                        mDownloadedAreaMealEntry.postValue(response.getAreaMeal());
+                    }
+                } catch (Exception e) {
+                    // Server probably invalid
+                    e.printStackTrace();
+                }
             }
         });
     }

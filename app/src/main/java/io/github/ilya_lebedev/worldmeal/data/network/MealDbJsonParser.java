@@ -23,8 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 
 public class MealDbJsonParser {
@@ -34,6 +36,10 @@ public class MealDbJsonParser {
     private static final String MDB_STR_AREA = "strArea";
 
     private static final String MDB_STR_CATEGORY = "strCategory";
+
+    private static final String MDB_STR_MEAL = "strMeal";
+    private static final String MDB_STR_MEAL_THUMB = "strMealThumb";
+    private static final String MDB_ID_MEAL = "idMeal";
 
     @Nullable
     static AreaListResponse parseAreaList(final String areaListJsonStr) throws JSONException {
@@ -51,6 +57,16 @@ public class MealDbJsonParser {
         CategoryEntry[] categoryEntries = categoryListFromJson(categoryListJson);
 
         return new CategoryListResponse(categoryEntries);
+    }
+
+    @Nullable
+    static AreaMealResponse paresAreaMealList(final String areaMealJsonStr, String areaName)
+            throws JSONException {
+        JSONObject areaMealListJson = new JSONObject(areaMealJsonStr);
+
+        AreaMealEntry[] areaMealEntries = areaMealListFromJson(areaMealListJson, areaName);
+
+        return new AreaMealResponse(areaMealEntries);
     }
 
     private static AreaEntry[] areaListFromJson(final JSONObject areaListJson) throws JSONException {
@@ -95,6 +111,32 @@ public class MealDbJsonParser {
         String categoryName = categoryJson.getString(MDB_STR_CATEGORY);
 
         return new CategoryEntry(categoryName);
+    }
+
+    private static AreaMealEntry[] areaMealListFromJson(final JSONObject areaMealListJson, String areaName)
+            throws JSONException {
+        JSONArray areaMealJsonArray = areaMealListJson.getJSONArray(MDB_MEALS);
+
+        AreaMealEntry[] areaMealEntries = new AreaMealEntry[areaMealJsonArray.length()];
+
+        for (int i = 0; i < areaMealJsonArray.length(); i++) {
+            JSONObject areaMealJson = areaMealJsonArray.getJSONObject(i);
+
+            AreaMealEntry areaMeal = areaMealEntryFromJson(areaMealJson, areaName);
+
+            areaMealEntries[i] = areaMeal;
+        }
+
+        return areaMealEntries;
+    }
+
+    private static AreaMealEntry areaMealEntryFromJson(final JSONObject areaMealJson, String areaName)
+            throws JSONException {
+        String mealName = areaMealJson.getString(MDB_STR_MEAL);
+        String thumbnail = areaMealJson.getString(MDB_STR_MEAL_THUMB);
+        long mealId = areaMealJson.getLong(MDB_ID_MEAL);
+
+        return new AreaMealEntry(mealId, mealName, thumbnail, areaName);
     }
 
 }

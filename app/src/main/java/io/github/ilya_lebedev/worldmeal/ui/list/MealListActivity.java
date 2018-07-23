@@ -16,8 +16,11 @@
 
 package io.github.ilya_lebedev.worldmeal.ui.list;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,6 +31,10 @@ import android.widget.ProgressBar;
 import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.R;
+import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
+import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModel;
+import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
 public class MealListActivity extends AppCompatActivity implements MealListAdapter.OnClickHandler {
 
@@ -81,7 +88,21 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
         switch (mClassificationType) {
 
             case CLASSIFICATION_TYPE_AREA: {
-                // TODO
+                AreaMealViewModelFactory factory = WorldMealInjectorUtils
+                        .provideAreaMealViewModelFactory(this, classificationEntryName);
+                AreaMealViewModel viewModel = ViewModelProviders.of(this, factory)
+                        .get(AreaMealViewModel.class);
+                viewModel.getAreaMeal().observe(this, new Observer<List<AreaMealEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<AreaMealEntry> areaMealEntries) {
+                        mMealListAdapter.swapMealEntries(areaMealEntries);
+                        if (areaMealEntries != null && areaMealEntries.size() != 0) {
+                            showDataView();
+                        } else {
+                            showLoading();
+                        }
+                    }
+                });
 
                 break;
             }

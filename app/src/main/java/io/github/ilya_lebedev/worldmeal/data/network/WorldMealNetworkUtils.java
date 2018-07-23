@@ -40,6 +40,7 @@ public class WorldMealNetworkUtils {
     private static final String API_KEY_PATH = "1"; // TODO BuildConfig
 
     private static final String LIST_PATH = "list.php";
+    private static final String FILTER_PATH = "filter.php";
 
     private static final String AREA_PARAM = "a";
     private static final String CATEGORY_PARAM = "c";
@@ -68,6 +69,16 @@ public class WorldMealNetworkUtils {
                 .build();
 
         return buildUrlFromUri(categoryListUri);
+    }
+
+    static URL getAreaMealUrl(String areaName) {
+        Uri areaMealUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
+                .appendPath(API_KEY_PATH)
+                .appendPath(FILTER_PATH)
+                .appendQueryParameter(AREA_PARAM, areaName)
+                .build();
+
+        return buildUrlFromUri(areaMealUri);
     }
 
     /**

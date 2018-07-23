@@ -24,6 +24,7 @@ import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDatabase;
 import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModelFactory;
 
 /**
  * WorldMealInjectorUtils provides static methods to inject
@@ -57,6 +58,12 @@ public class WorldMealInjectorUtils {
     public static CategoryViewModelFactory provideCategoryViewModelFactory(Context context) {
         WorldMealRepository repository = provideRepository(context);
         return new CategoryViewModelFactory(repository);
+    }
+
+    public static AreaMealViewModelFactory provideAreaMealViewModelFactory(Context context,
+                                                                           String areaName) {
+        WorldMealRepository repository = provideRepository(context);
+        return new AreaMealViewModelFactory(repository, areaName);
     }
 
 }

@@ -18,6 +18,7 @@ package io.github.ilya_lebedev.worldmeal.ui.classification;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,7 @@ import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaListViewModel
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryListViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.list.MealListActivity;
 import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
 /**
@@ -167,7 +169,29 @@ public class ClassificationFragment extends Fragment
 
     @Override
     public void onClick(String classificationEntryName) {
-        // TODO
+        startMealListActivity(classificationEntryName);
+    }
+
+    private void startMealListActivity(String classificationEntryName) {
+        int classificationType;
+        switch (mClassificationType) {
+            case CLASSIFICATION_TYPE_AREA:
+                classificationType = MealListActivity.CLASSIFICATION_TYPE_AREA;
+                break;
+            case CLASSIFICATION_TYPE_CATEGORY:
+                classificationType = MealListActivity.CLASSIFICATION_TYPE_CATEGORY;
+                break;
+            case CLASSIFICATION_TYPE_INGREDIENT:
+                classificationType = MealListActivity.CLASSIFICATION_TYPE_INGREDIENT;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported classification type "
+                        + mClassificationType);
+        }
+
+        Intent startIntent = MealListActivity.generateStartIntent(getContext(),
+                classificationType, classificationEntryName);
+        startActivity(startIntent);
     }
 
     /**

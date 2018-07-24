@@ -91,6 +91,16 @@ public class WorldMealNetworkUtils {
         return buildUrlFromUri(categoryMealUri);
     }
 
+    static URL getIngredientMealUrl(String ingredientName) {
+        Uri ingredientMealUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
+                .appendEncodedPath(API_KEY_PATH)
+                .appendPath(FILTER_PATH)
+                .appendQueryParameter(INGREDIENT_PARAM, ingredientName)
+                .build();
+
+        return buildUrlFromUri(ingredientMealUri);
+    }
+
     /**
      * This method returns the entire result from the HTTP response.
      *

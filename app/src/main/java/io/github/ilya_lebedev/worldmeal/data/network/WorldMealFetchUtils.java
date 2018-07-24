@@ -32,9 +32,11 @@ public class WorldMealFetchUtils {
     public static final String ACTION_FETCH_CATEGORY_LIST = "fetch_category_list";
     public static final String ACTION_FETCH_AREA_MEAL_LIST = "fetch_area_meal_list";
     public static final String ACTION_FETCH_CATEGORY_MEAL_LIST = "fetch_category_meal_list";
+    public static final String ACTION_FETCH_INGREDIENT_MEAL_LIST = "fetch_ingredient_meal_list";
 
     private static final String EXTRA_AREA_NAME = "area_name";
     private static final String EXTRA_CATEGORY_NAME = "category_name";
+    private static final String EXTRA_INGREDIENT_NAME = "ingredient_name";
 
     public static void fetch(Context context, Intent fetchIntent) {
         WorldMealNetworkDataSource networkDataSource =
@@ -51,6 +53,9 @@ public class WorldMealFetchUtils {
         } else if (ACTION_FETCH_CATEGORY_MEAL_LIST.equals(action)) {
             String categoryName = fetchIntent.getStringExtra(EXTRA_CATEGORY_NAME);
             networkDataSource.fetchCategoryMealList(categoryName);
+        } else if (ACTION_FETCH_INGREDIENT_MEAL_LIST.equals(action)) {
+            String ingredientName = fetchIntent.getStringExtra(EXTRA_INGREDIENT_NAME);
+            networkDataSource.fetchIngredientMealList(ingredientName);
         } else {
             throw new IllegalArgumentException("Unsupported action: " + action);
         }
@@ -83,6 +88,14 @@ public class WorldMealFetchUtils {
                 WorldMealSyncIntentService.class);
         fetchIntent.setAction(ACTION_FETCH_CATEGORY_MEAL_LIST);
         fetchIntent.putExtra(EXTRA_CATEGORY_NAME, categoryName);
+        context.startService(fetchIntent);
+    }
+
+    public static void startFetchIngredientMealList(Context context, String ingredientName) {
+        Intent fetchIntent = new Intent(context.getApplicationContext(),
+                WorldMealSyncIntentService.class);
+        fetchIntent.setAction(ACTION_FETCH_INGREDIENT_MEAL_LIST);
+        fetchIntent.putExtra(EXTRA_INGREDIENT_NAME, ingredientName);
         context.startService(fetchIntent);
     }
 

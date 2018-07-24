@@ -33,10 +33,13 @@ import java.util.List;
 import io.github.ilya_lebedev.worldmeal.R;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.list.category.CategoryMealViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.list.category.CategoryMealViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.list.ingredient.IngredientMealViewModel;
+import io.github.ilya_lebedev.worldmeal.ui.list.ingredient.IngredientMealViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
 public class MealListActivity extends AppCompatActivity implements MealListAdapter.OnClickHandler {
@@ -131,7 +134,22 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
             }
 
             case CLASSIFICATION_TYPE_INGREDIENT: {
-                // TODO
+                IngredientMealViewModelFactory factory = WorldMealInjectorUtils
+                        .provideIngredientMealViewModelFactory(this, classificationEntryName);
+                IngredientMealViewModel viewModel = ViewModelProviders.of(this, factory)
+                        .get(IngredientMealViewModel.class);
+                viewModel.getIngredientMeal()
+                        .observe(this, new Observer<List<IngredientMealEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<IngredientMealEntry> ingredientMealEntries) {
+                        mMealListAdapter.swapMealEntries(ingredientMealEntries);
+                        if (ingredientMealEntries != null && ingredientMealEntries.size() != 0) {
+                            showDataView();
+                        } else {
+                            showLoading();
+                        }
+                    }
+                });
 
                 break;
             }

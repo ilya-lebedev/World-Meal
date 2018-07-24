@@ -26,10 +26,12 @@ import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryMealResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientMealResponse;
 
 public class MealDbJsonParser {
 
@@ -80,6 +82,17 @@ public class MealDbJsonParser {
                 categoryMealListFromJson(categoryMealListJson, categoryName);
 
         return new CategoryMealResponse(categoryMealEntries);
+    }
+
+    @Nullable
+    static IngredientMealResponse parseIngredientMealList
+            (final String ingredientMealJsonStr, String ingredientName) throws JSONException {
+        JSONObject ingredientMealListJson = new JSONObject(ingredientMealJsonStr);
+
+        IngredientMealEntry[] ingredientMealEntries =
+                ingredientMealListFromJson(ingredientMealListJson, ingredientName);
+
+        return new IngredientMealResponse(ingredientMealEntries);
     }
 
     private static AreaEntry[] areaListFromJson(final JSONObject areaListJson) throws JSONException {
@@ -176,6 +189,34 @@ public class MealDbJsonParser {
         long mealId = categoryMealJson.getLong(MDB_ID_MEAL);
 
         return new CategoryMealEntry(mealId, mealName, thumbnail, categoryName);
+    }
+
+    private static IngredientMealEntry[] ingredientMealListFromJson
+            (final JSONObject ingredientMealListJson, String ingredientName) throws JSONException {
+        JSONArray ingredientMealJsonArray = ingredientMealListJson.getJSONArray(MDB_MEALS);
+
+        IngredientMealEntry[] ingredientMealEntries =
+                new IngredientMealEntry[ingredientMealJsonArray.length()];
+
+        for (int i = 0; i < ingredientMealJsonArray.length(); i++) {
+            JSONObject ingredientMealJson = ingredientMealJsonArray.getJSONObject(i);
+
+            IngredientMealEntry ingredientMeal =
+                    ingredientMealEntryFromJson(ingredientMealJson, ingredientName);
+
+            ingredientMealEntries[i] = ingredientMeal;
+        }
+
+        return ingredientMealEntries;
+    }
+
+    private static IngredientMealEntry ingredientMealEntryFromJson
+            (final JSONObject ingredientMealJson, String ingredientName) throws JSONException {
+        String mealName = ingredientMealJson.getString(MDB_STR_MEAL);
+        String thumbnail = ingredientMealJson.getString(MDB_STR_MEAL_THUMB);
+        long mealId = ingredientMealJson.getLong(MDB_ID_MEAL);
+
+        return new IngredientMealEntry(mealId, mealName, thumbnail, ingredientName);
     }
 
 }

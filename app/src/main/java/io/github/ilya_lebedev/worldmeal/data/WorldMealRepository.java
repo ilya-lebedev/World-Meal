@@ -26,6 +26,7 @@ import io.github.ilya_lebedev.worldmeal.AppExecutors;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDao;
 import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
 
@@ -91,6 +92,20 @@ public class WorldMealRepository {
                 });
             }
         });
+
+        LiveData<CategoryMealEntry[]> networkCategoryMealData =
+                mNetworkDataSource.getCurrentCategoryMealList();
+        networkCategoryMealData.observeForever(new Observer<CategoryMealEntry[]>() {
+            @Override
+            public void onChanged(@Nullable final CategoryMealEntry[] categoryMealEntries) {
+                mAppExecutors.diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWorldMealDao.bulkInsert(categoryMealEntries);
+                    }
+                });
+            }
+        });
     }
 
     public static WorldMealRepository getInstance(WorldMealDao worldMealDao,
@@ -144,6 +159,19 @@ public class WorldMealRepository {
         return mWorldMealDao.getAreaMeal(areaName);
     }
 
+    public LiveData<List<CategoryMealEntry>> getCategoryMealList(final String categoryName) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (isCategoryMealListFetchNeeded(categoryName)) {
+                    startFetchCategoryMealList(categoryName);
+                }
+            }
+        });
+
+        return mWorldMealDao.getCategoryMeal(categoryName);
+    }
+
     private boolean isAreaListFetchNeeded() {
         int areaCount = mWorldMealDao.countAllArea();
         return (areaCount == 0);
@@ -159,6 +187,11 @@ public class WorldMealRepository {
         return (areaMealCount == 0);
     }
 
+    private boolean isCategoryMealListFetchNeeded(String categoryName) {
+        int categoryMealCount = mWorldMealDao.countAllCategoryMeal(categoryName);
+        return (categoryMealCount == 0);
+    }
+
     private void startFetchAreaList() {
         mNetworkDataSource.startFetchAreaList();
     }
@@ -169,6 +202,10 @@ public class WorldMealRepository {
 
     private void startFetchAreaMealList(String areaName) {
         mNetworkDataSource.startFetchAreaMealList(areaName);
+    }
+
+    private void startFetchCategoryMealList(String categoryName) {
+        mNetworkDataSource.startFetchCategoryMealList(categoryName);
     }
 
 }

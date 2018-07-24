@@ -32,8 +32,11 @@ import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.R;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.list.category.CategoryMealViewModel;
+import io.github.ilya_lebedev.worldmeal.ui.list.category.CategoryMealViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
 public class MealListActivity extends AppCompatActivity implements MealListAdapter.OnClickHandler {
@@ -108,7 +111,21 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
             }
 
             case CLASSIFICATION_TYPE_CATEGORY: {
-                // TODO
+                CategoryMealViewModelFactory factory = WorldMealInjectorUtils
+                        .provideCategoryMealViewModelFactory(this, classificationEntryName);
+                CategoryMealViewModel viewModel =ViewModelProviders.of(this, factory)
+                        .get(CategoryMealViewModel.class);
+                viewModel.getCategoryMeal().observe(this, new Observer<List<CategoryMealEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<CategoryMealEntry> categoryMealEntries) {
+                        mMealListAdapter.swapMealEntries(categoryMealEntries);
+                        if (categoryMealEntries != null && categoryMealEntries.size() != 0) {
+                            showDataView();
+                        } else {
+                            showLoading();
+                        }
+                    }
+                });
 
                 break;
             }

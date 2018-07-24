@@ -26,9 +26,11 @@ import io.github.ilya_lebedev.worldmeal.AppExecutors;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryMealResponse;
 
 /**
  * WorldMealNetworkDataSource
@@ -48,6 +50,7 @@ public class WorldMealNetworkDataSource {
     private final MutableLiveData<AreaEntry[]> mDownloadedAreaEntry;
     private final MutableLiveData<CategoryEntry[]> mDownloadedCategoryEntry;
     private final MutableLiveData<AreaMealEntry[]> mDownloadedAreaMealEntry;
+    private final MutableLiveData<CategoryMealEntry[]> mDownloadedCategoryMealEntry;
 
     private WorldMealNetworkDataSource(Context context, AppExecutors appExecutors) {
         mContext = context;
@@ -56,6 +59,7 @@ public class WorldMealNetworkDataSource {
         mDownloadedAreaEntry = new MutableLiveData<>();
         mDownloadedCategoryEntry = new MutableLiveData<>();
         mDownloadedAreaMealEntry = new MutableLiveData<>();
+        mDownloadedCategoryMealEntry = new MutableLiveData<>();
     }
 
     public static WorldMealNetworkDataSource getInstance(Context context, AppExecutors appExecutors) {
@@ -80,6 +84,10 @@ public class WorldMealNetworkDataSource {
         return mDownloadedAreaMealEntry;
     }
 
+    public LiveData<CategoryMealEntry[]> getCurrentCategoryMealList() {
+        return mDownloadedCategoryMealEntry;
+    }
+
     public void startFetchAreaList() {
         WorldMealFetchUtils.startFetchAreaList(mContext);
     }
@@ -90,6 +98,10 @@ public class WorldMealNetworkDataSource {
 
     public void startFetchAreaMealList(String areaName) {
         WorldMealFetchUtils.startFetchAreaMealList(mContext, areaName);
+    }
+
+    public void startFetchCategoryMealList(String categoryName) {
+       WorldMealFetchUtils.startFetchCategoryMealList(mContext, categoryName);
     }
 
     public void fetchAreaList() {
@@ -173,12 +185,27 @@ public class WorldMealNetworkDataSource {
         });
     }
 
-    void fetchCategoryMealList(String categoryName) {
-        // TODO
+    void fetchCategoryMealList(final String categoryName) {
         mExecutors.networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                // TODO
+
+                try {
+                    URL categoryMealRequestUrl = WorldMealNetworkUtils.getCategoryMealUrl(categoryName);
+
+                    String jsonCategoryMealResponse = WorldMealNetworkUtils
+                            .getResponseFromHttpUrl(categoryMealRequestUrl);
+
+                    CategoryMealResponse response = MealDbJsonParser
+                            .parseCategoryMealList(jsonCategoryMealResponse, categoryName);
+
+                    if (response != null && response.getCategoryMeal().length != 0) {
+                        mDownloadedCategoryMealEntry.postValue(response.getCategoryMeal());
+                    }
+                } catch (Exception e) {
+                    // Server probably invalid
+                    e.printStackTrace();
+                }
             }
         });
     }

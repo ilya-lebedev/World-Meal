@@ -107,6 +107,9 @@ public interface WorldMealDao {
     @Query("DELETE FROM category_meal")
     void deleteAllCategoryMeal();
 
+    @Query("SELECT COUNT(id) FROM category_meal WHERE category == :category")
+    int countAllCategoryMeal(String category);
+
     /*
      * Ingredient
      */

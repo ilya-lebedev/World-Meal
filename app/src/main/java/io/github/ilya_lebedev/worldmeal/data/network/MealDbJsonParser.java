@@ -62,7 +62,7 @@ public class MealDbJsonParser {
     }
 
     @Nullable
-    static AreaMealResponse paresAreaMealList(final String areaMealJsonStr, String areaName)
+    static AreaMealResponse parseAreaMealList(final String areaMealJsonStr, String areaName)
             throws JSONException {
         JSONObject areaMealListJson = new JSONObject(areaMealJsonStr);
 

@@ -172,7 +172,7 @@ public class WorldMealNetworkDataSource {
                             .getResponseFromHttpUrl(areaMealRequestUrl);
 
                     AreaMealResponse response = MealDbJsonParser
-                            .paresAreaMealList(jsonAreaMealResponse, areaName);
+                            .parseAreaMealList(jsonAreaMealResponse, areaName);
 
                     if (response != null && response.getAreaMeal().length != 0) {
                         mDownloadedAreaMealEntry.postValue(response.getAreaMeal());

@@ -34,10 +34,13 @@ import java.util.List;
 import io.github.ilya_lebedev.worldmeal.R;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.IngredientEntry;
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaListViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryListViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.classification.ingredient.IngredientListViewModel;
+import io.github.ilya_lebedev.worldmeal.ui.classification.ingredient.IngredientViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.list.MealListActivity;
 import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
 
@@ -129,7 +132,21 @@ public class ClassificationFragment extends Fragment
             }
 
             case CLASSIFICATION_TYPE_INGREDIENT: {
-                // TODO
+                IngredientViewModelFactory factory = WorldMealInjectorUtils
+                        .provideIngredientViewModelFactory(getContext().getApplicationContext());
+                IngredientListViewModel viewModel = ViewModelProviders.of(this, factory)
+                        .get(IngredientListViewModel.class);
+                viewModel.getIngredientList().observe(this, new Observer<List<IngredientEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<IngredientEntry> ingredientEntries) {
+                        mListAdapter.swapClassificationEntries(ingredientEntries);
+                        if (ingredientEntries != null && ingredientEntries.size() != 0) {
+                            showDataView();
+                        } else {
+                            showLoading();
+                        }
+                    }
+                });
 
                 break;
             }

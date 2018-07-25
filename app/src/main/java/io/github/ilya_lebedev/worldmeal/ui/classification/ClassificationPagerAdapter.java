@@ -25,7 +25,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class ClassificationPagerAdapter extends FragmentPagerAdapter {
 
-    private static final int FRAGMENT_COUNT = 2;
+    private static final int FRAGMENT_COUNT = 3;
 
     public ClassificationPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -40,6 +40,9 @@ public class ClassificationPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return ClassificationFragment
                         .newInstance(ClassificationFragment.CLASSIFICATION_TYPE_CATEGORY);
+            case 2:
+                return ClassificationFragment
+                        .newInstance(ClassificationFragment.CLASSIFICATION_TYPE_INGREDIENT);
             default:
                 throw new IllegalArgumentException("There is no item for position " + position);
         }
@@ -57,6 +60,8 @@ public class ClassificationPagerAdapter extends FragmentPagerAdapter {
                 return "Area";
             case 0:
                 return "Category";
+            case 2:
+                return "Ingredient";
             default:
                 throw new IllegalArgumentException("There is no title for position " + position);
         }

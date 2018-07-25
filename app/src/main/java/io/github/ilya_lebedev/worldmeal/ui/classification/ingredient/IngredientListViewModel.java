@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-package io.github.ilya_lebedev.worldmeal.data.network.response;
+package io.github.ilya_lebedev.worldmeal.ui.classification.ingredient;
 
-import android.support.annotation.NonNull;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 
+import java.util.List;
+
+import io.github.ilya_lebedev.worldmeal.data.WorldMealRepository;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientEntry;
 
 /**
- * Response from the backend. Contains the ingredient list.
+ * IngredientListViewModel
  */
-public class IngredientListResponse {
+public class IngredientListViewModel extends ViewModel {
 
-    @NonNull
-    private final IngredientEntry[] mIngredientList;
+    private final LiveData<List<IngredientEntry>> mIngredientList;
+    private final WorldMealRepository mRepository;
 
-    public IngredientListResponse(@NonNull final IngredientEntry[] ingredientList) {
-        mIngredientList = ingredientList;
+    public IngredientListViewModel(WorldMealRepository repository) {
+        mRepository = repository;
+        mIngredientList = mRepository.getIngredientList();
     }
 
-    public IngredientEntry[] getIngredientList() {
+    public LiveData<List<IngredientEntry>> getIngredientList() {
         return mIngredientList;
     }
 

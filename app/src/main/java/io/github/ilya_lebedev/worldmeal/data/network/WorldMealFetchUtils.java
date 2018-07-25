@@ -30,6 +30,7 @@ public class WorldMealFetchUtils {
 
     public static final String ACTION_FETCH_AREA_LIST = "fetch_area_list";
     public static final String ACTION_FETCH_CATEGORY_LIST = "fetch_category_list";
+    public static final String ACTION_FETCH_INGREDIENT_LIST = "fetch_ingredient_list";
     public static final String ACTION_FETCH_AREA_MEAL_LIST = "fetch_area_meal_list";
     public static final String ACTION_FETCH_CATEGORY_MEAL_LIST = "fetch_category_meal_list";
     public static final String ACTION_FETCH_INGREDIENT_MEAL_LIST = "fetch_ingredient_meal_list";
@@ -47,6 +48,8 @@ public class WorldMealFetchUtils {
             networkDataSource.fetchAreaList();
         } else if (ACTION_FETCH_CATEGORY_LIST.equals(action)) {
             networkDataSource.fetchCategoryList();
+        } else if (ACTION_FETCH_INGREDIENT_LIST.equals(action)) {
+            networkDataSource.fetchIngredientList();
         } else if (ACTION_FETCH_AREA_MEAL_LIST.equals(action)) {
             String areaName = fetchIntent.getStringExtra(EXTRA_AREA_NAME);
             networkDataSource.fetchAreaMealList(areaName);
@@ -72,6 +75,13 @@ public class WorldMealFetchUtils {
         Intent fetchIntent = new Intent(context.getApplicationContext(),
                 WorldMealSyncIntentService.class);
         fetchIntent.setAction(ACTION_FETCH_CATEGORY_LIST);
+        context.startService(fetchIntent);
+    }
+
+    public static void startFetchIngredientList(Context context) {
+        Intent fetchIntent = new Intent(context.getApplicationContext(),
+                WorldMealSyncIntentService.class);
+        fetchIntent.setAction(ACTION_FETCH_INGREDIENT_LIST);
         context.startService(fetchIntent);
     }
 

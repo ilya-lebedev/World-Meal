@@ -71,6 +71,16 @@ public class WorldMealNetworkUtils {
         return buildUrlFromUri(categoryListUri);
     }
 
+    static URL getIngredientListUrl() {
+        Uri ingredientListUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
+                .appendPath(API_KEY_PATH)
+                .appendPath(LIST_PATH)
+                .appendQueryParameter(INGREDIENT_PARAM, LIST_VALUE)
+                .build();
+
+        return buildUrlFromUri(ingredientListUri);
+    }
+
     static URL getAreaMealUrl(String areaName) {
         Uri areaMealUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
                 .appendPath(API_KEY_PATH)

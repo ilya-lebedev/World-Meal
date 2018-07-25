@@ -26,11 +26,13 @@ import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.IngredientEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryMealResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientMealResponse;
 
 public class MealDbJsonParser {
@@ -40,6 +42,8 @@ public class MealDbJsonParser {
     private static final String MDB_STR_AREA = "strArea";
 
     private static final String MDB_STR_CATEGORY = "strCategory";
+
+    private static final String MDB_STR_INGREDIENT = "strIngredient";
 
     private static final String MDB_STR_MEAL = "strMeal";
     private static final String MDB_STR_MEAL_THUMB = "strMealThumb";
@@ -61,6 +65,16 @@ public class MealDbJsonParser {
         CategoryEntry[] categoryEntries = categoryListFromJson(categoryListJson);
 
         return new CategoryListResponse(categoryEntries);
+    }
+
+    @Nullable
+    static IngredientListResponse parseIngredientList(final String ingredientListJsonStr)
+            throws JSONException {
+        JSONObject ingredientListJson = new JSONObject(ingredientListJsonStr);
+
+        IngredientEntry[] ingredientEntries = ingredientListFromJson(ingredientListJson);
+
+        return new IngredientListResponse(ingredientEntries);
     }
 
     @Nullable
@@ -137,6 +151,30 @@ public class MealDbJsonParser {
         String categoryName = categoryJson.getString(MDB_STR_CATEGORY);
 
         return new CategoryEntry(categoryName);
+    }
+
+    private static IngredientEntry[] ingredientListFromJson(final JSONObject ingredientListJson)
+            throws JSONException {
+        JSONArray ingredientJsonArray = ingredientListJson.getJSONArray(MDB_MEALS);
+
+        IngredientEntry[] ingredientEntries = new IngredientEntry[ingredientJsonArray.length()];
+
+        for (int i = 0; i < ingredientJsonArray.length(); i++) {
+            JSONObject ingredientJson = ingredientJsonArray.getJSONObject(i);
+
+            IngredientEntry ingredient = ingredientEntryFromJson(ingredientJson);
+
+            ingredientEntries[i] = ingredient;
+        }
+
+        return ingredientEntries;
+    }
+
+    private static IngredientEntry ingredientEntryFromJson(final JSONObject ingredientJson)
+            throws JSONException {
+        String ingredientName = ingredientJson.getString(MDB_STR_INGREDIENT);
+
+        return new IngredientEntry(ingredientName);
     }
 
     private static AreaMealEntry[] areaMealListFromJson(final JSONObject areaMealListJson, String areaName)

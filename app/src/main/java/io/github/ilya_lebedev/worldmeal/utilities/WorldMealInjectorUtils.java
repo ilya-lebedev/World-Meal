@@ -24,6 +24,7 @@ import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDatabase;
 import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
 import io.github.ilya_lebedev.worldmeal.ui.classification.area.AreaViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.classification.category.CategoryViewModelFactory;
+import io.github.ilya_lebedev.worldmeal.ui.classification.ingredient.IngredientViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.list.category.CategoryMealViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.list.ingredient.IngredientMealViewModelFactory;
@@ -60,6 +61,11 @@ public class WorldMealInjectorUtils {
     public static CategoryViewModelFactory provideCategoryViewModelFactory(Context context) {
         WorldMealRepository repository = provideRepository(context);
         return new CategoryViewModelFactory(repository);
+    }
+
+    public static IngredientViewModelFactory provideIngredientViewModelFactory(Context context) {
+        WorldMealRepository repository = provideRepository(context);
+        return new IngredientViewModelFactory(repository);
     }
 
     public static AreaMealViewModelFactory provideAreaMealViewModelFactory(Context context,

@@ -40,7 +40,7 @@ public class ClassificationActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mPagerAdapter = new ClassificationPagerAdapter(getSupportFragmentManager());
+        mPagerAdapter = new ClassificationPagerAdapter(getSupportFragmentManager(), this);
         mViewPager = findViewById(R.id.viewpager);
         mViewPager.setAdapter(mPagerAdapter);
 

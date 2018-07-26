@@ -5,4 +5,8 @@
      <string name="area_title">Area</string>
      <string name="instructions_title">Instructions</string>
 
+     <string name="tab_areas">Areas</string>
+     <string name="tab_categories">Categories</string>
+     <string name="tab_ingredients">Ingredients</string>
+
 </resources>

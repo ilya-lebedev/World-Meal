@@ -16,9 +16,12 @@
 
 package io.github.ilya_lebedev.worldmeal.ui.classification;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import io.github.ilya_lebedev.worldmeal.R;
 
 /**
  * ClassificationPagerAdapter
@@ -27,8 +30,11 @@ public class ClassificationPagerAdapter extends FragmentPagerAdapter {
 
     private static final int FRAGMENT_COUNT = 3;
 
-    public ClassificationPagerAdapter(FragmentManager fm) {
+    private Context mContext;
+
+    public ClassificationPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        mContext = context;
     }
 
     @Override
@@ -57,11 +63,11 @@ public class ClassificationPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 1:
-                return "Area";
+                return mContext.getString(R.string.tab_areas);
             case 0:
-                return "Category";
+                return mContext.getString(R.string.tab_categories);
             case 2:
-                return "Ingredient";
+                return mContext.getString(R.string.tab_ingredients);
             default:
                 throw new IllegalArgumentException("There is no title for position " + position);
         }

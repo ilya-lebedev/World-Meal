@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias "alias"
+            keyPassword "password"
+            storeFile file("../store.jks.")
+            storePassword "password"
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.github.ilya_lebedev.worldmeal"
@@ -14,6 +22,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

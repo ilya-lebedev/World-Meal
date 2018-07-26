@@ -1,5 +1,9 @@
-<resources>
+ <resources>
     <string name="app_name">World Meal</string>
+
+     <string name="category_title">Category</string>
+     <string name="area_title">Area</string>
+     <string name="instructions_title">Instructions</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

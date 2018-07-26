@@ -166,6 +166,9 @@ public interface WorldMealDao {
     @Query("DELETE FROM meal")
     void deleteAllMeals();
 
+    @Query("SELECT COUNT(id) FROM meal WHERE id == :mealId")
+    int countMeal(long mealId);
+
     /*
      * MealIngredient
      */

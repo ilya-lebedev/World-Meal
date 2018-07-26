@@ -19,7 +19,6 @@ package io.github.ilya_lebedev.worldmeal.data.network;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.util.Log;
 
 import java.net.URL;
 
@@ -30,12 +29,14 @@ import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.MealEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientMealResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.MealResponse;
 
 /**
  * WorldMealNetworkDataSource
@@ -58,6 +59,7 @@ public class WorldMealNetworkDataSource {
     private final MutableLiveData<AreaMealEntry[]> mDownloadedAreaMealEntry;
     private final MutableLiveData<CategoryMealEntry[]> mDownloadedCategoryMealEntry;
     private final MutableLiveData<IngredientMealEntry[]> mDownloadedIngredientMealEntry;
+    private final MutableLiveData<MealEntry> mDownloadedMealEntry;
 
     private WorldMealNetworkDataSource(Context context, AppExecutors appExecutors) {
         mContext = context;
@@ -69,6 +71,7 @@ public class WorldMealNetworkDataSource {
         mDownloadedAreaMealEntry = new MutableLiveData<>();
         mDownloadedCategoryMealEntry = new MutableLiveData<>();
         mDownloadedIngredientMealEntry = new MutableLiveData<>();
+        mDownloadedMealEntry = new MutableLiveData<>();
     }
 
     public static WorldMealNetworkDataSource getInstance(Context context, AppExecutors appExecutors) {
@@ -105,6 +108,10 @@ public class WorldMealNetworkDataSource {
         return mDownloadedIngredientMealEntry;
     }
 
+    public LiveData<MealEntry> getCurrentMeal() {
+        return mDownloadedMealEntry;
+    }
+
     public void startFetchAreaList() {
         WorldMealFetchUtils.startFetchAreaList(mContext);
     }
@@ -127,6 +134,10 @@ public class WorldMealNetworkDataSource {
 
     public void startFetchIngredientMealList(String ingredientName) {
         WorldMealFetchUtils.startFetchIngredientMealList(mContext, ingredientName);
+    }
+
+    public void startFetchMeal(long mealId) {
+        WorldMealFetchUtils.startFetchMeal(mContext, mealId);
     }
 
     public void fetchAreaList() {
@@ -265,6 +276,30 @@ public class WorldMealNetworkDataSource {
 
                     if (response != null && response.getIngredientMeal().length != 0) {
                         mDownloadedIngredientMealEntry.postValue(response.getIngredientMeal());
+                    }
+                } catch (Exception e) {
+                    // Server probably invalid
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    void fetchMeal(final long mealId) {
+        mExecutors.networkIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL mealRequestUrl = WorldMealNetworkUtils.getMealUrl(mealId);
+
+                    String jsonMealResponse = WorldMealNetworkUtils
+                            .getResponseFromHttpUrl(mealRequestUrl);
+
+                    MealResponse response = MealDbJsonParser
+                            .parseMeal(jsonMealResponse);
+
+                    if (response != null && response.getMeal() != null) {
+                        mDownloadedMealEntry.postValue(response.getMeal());
                     }
                 } catch (Exception e) {
                     // Server probably invalid

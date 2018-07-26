@@ -34,6 +34,7 @@ import io.github.ilya_lebedev.worldmeal.R;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
+import io.github.ilya_lebedev.worldmeal.ui.detail.MealRecipeDetailActivity;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModel;
 import io.github.ilya_lebedev.worldmeal.ui.list.area.AreaMealViewModelFactory;
 import io.github.ilya_lebedev.worldmeal.ui.list.category.CategoryMealViewModel;
@@ -87,7 +88,8 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
 
     @Override
     public void onClick(long mealId) {
-        // TODO
+        Intent startIntent = MealRecipeDetailActivity.getStartIntent(this, mealId);
+        startActivity(startIntent);
     }
 
     private void initializeData(String classificationEntryName) {

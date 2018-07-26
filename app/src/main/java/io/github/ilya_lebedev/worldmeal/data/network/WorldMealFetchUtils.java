@@ -34,10 +34,12 @@ public class WorldMealFetchUtils {
     public static final String ACTION_FETCH_AREA_MEAL_LIST = "fetch_area_meal_list";
     public static final String ACTION_FETCH_CATEGORY_MEAL_LIST = "fetch_category_meal_list";
     public static final String ACTION_FETCH_INGREDIENT_MEAL_LIST = "fetch_ingredient_meal_list";
+    public static final String ACTION_FETCH_MEAL = "fetch_meal";
 
     private static final String EXTRA_AREA_NAME = "area_name";
     private static final String EXTRA_CATEGORY_NAME = "category_name";
     private static final String EXTRA_INGREDIENT_NAME = "ingredient_name";
+    private static final String EXTRA_MEAL_ID = "meal_id";
 
     public static void fetch(Context context, Intent fetchIntent) {
         WorldMealNetworkDataSource networkDataSource =
@@ -59,6 +61,9 @@ public class WorldMealFetchUtils {
         } else if (ACTION_FETCH_INGREDIENT_MEAL_LIST.equals(action)) {
             String ingredientName = fetchIntent.getStringExtra(EXTRA_INGREDIENT_NAME);
             networkDataSource.fetchIngredientMealList(ingredientName);
+        } else if(ACTION_FETCH_MEAL.equals(action)) {
+            long mealId = fetchIntent.getLongExtra(EXTRA_MEAL_ID, -1);
+            networkDataSource.fetchMeal(mealId);
         } else {
             throw new IllegalArgumentException("Unsupported action: " + action);
         }
@@ -106,6 +111,14 @@ public class WorldMealFetchUtils {
                 WorldMealSyncIntentService.class);
         fetchIntent.setAction(ACTION_FETCH_INGREDIENT_MEAL_LIST);
         fetchIntent.putExtra(EXTRA_INGREDIENT_NAME, ingredientName);
+        context.startService(fetchIntent);
+    }
+
+    public static void startFetchMeal(Context context, long mealId) {
+        Intent fetchIntent = new Intent(context.getApplicationContext(),
+                WorldMealSyncIntentService.class);
+        fetchIntent.setAction(ACTION_FETCH_MEAL);
+        fetchIntent.putExtra(EXTRA_MEAL_ID, mealId);
         context.startService(fetchIntent);
     }
 

@@ -33,6 +33,13 @@
     <dimen name="list_item_classification_meal_image_margin">16dp</dimen>
     <dimen name="list_item_classification_meal_text_margin">16dp</dimen>
 
+    <dimen name="meal_detail_name_vertical_padding">32dp</dimen>
+    <dimen name="meal_detail_name_horizontal_padding">16dp</dimen>
+    <dimen name="meal_detail_title_vertical_margin">32dp</dimen>
+    <dimen name="meal_detail_title_horizontal_margin">16dp</dimen>
+    <dimen name="meal_detail_text_vertical_margin">8dp</dimen>
+    <dimen name="meal_detail_text_horizontal_margin">16dp</dimen>
+
     <integer name="meal_grid_span_count">1</integer>
 
 </resources>

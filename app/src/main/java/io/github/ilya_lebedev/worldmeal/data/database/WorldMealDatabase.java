@@ -19,6 +19,7 @@ package io.github.ilya_lebedev.worldmeal.data.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 /**
@@ -36,6 +37,7 @@ import android.content.Context;
                 MealIngredientEntry.class
         },
         version = 1)
+@TypeConverters(DateConverter.class)
 public abstract class WorldMealDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "world_meal";

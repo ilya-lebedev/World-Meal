@@ -22,6 +22,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -184,5 +185,21 @@ public interface WorldMealDao {
 
     @Query("DELETE FROM meal_ingredient")
     void deleteAllMealIngredient();
+
+    /*
+     * Meal of the day
+     */
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(MealOfDayEntry mealOfDay);
+
+    @Query("SELECT * FROM meal_of_day ORDER BY date DESC LIMIT 1")
+    MealOfDayEntry getMealOfDay();
+
+    @Query("DELETE FROM meal_of_day WHERE date < :date")
+    void deleteOldMealOfDay(Date date);
+
+    @Query("SELECT COUNT(id) FROM meal_of_day")
+    int countAllMealOfDay();
 
 }

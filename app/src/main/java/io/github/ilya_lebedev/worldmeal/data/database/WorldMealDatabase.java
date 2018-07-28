@@ -34,7 +34,8 @@ import android.content.Context;
                 IngredientEntry.class,
                 IngredientMealEntry.class,
                 MealEntry.class,
-                MealIngredientEntry.class
+                MealIngredientEntry.class,
+                MealOfDayEntry.class
         },
         version = 1)
 @TypeConverters(DateConverter.class)

@@ -20,7 +20,16 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Driver;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
+
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import io.github.ilya_lebedev.worldmeal.AppExecutors;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
@@ -47,6 +56,15 @@ import io.github.ilya_lebedev.worldmeal.data.network.response.MealResponse;
 public class WorldMealNetworkDataSource {
 
     private static final String TAG = "WorldMealNetworkDataSrc";
+
+    private static final String WORLD_MEAL_SYNC_TAG = "world_meal_sync";
+
+    private static final int SYNC_INTERVAL_HOURS = 12;
+    private static final int SYNC_INTERVAL_SECONDS =
+            (int) TimeUnit.HOURS.toSeconds(SYNC_INTERVAL_HOURS);
+    private static final int SYNC_FLEXTIME_HOURS = 1;
+    private static final int SYNC_FLEXTIME_SECONDS =
+            (int) TimeUnit.HOURS.toSeconds(SYNC_FLEXTIME_HOURS );
 
     // For singleton instantiation
     private static final Object LOCK = new Object();
@@ -153,7 +171,22 @@ public class WorldMealNetworkDataSource {
     }
 
     public void scheduleRecurringFetchMealOfDaySync() {
-        // TODO
+        Driver driver = new GooglePlayDriver(mContext);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+
+        Job syncMealOfDayJob = dispatcher.newJobBuilder()
+                .setService(WorldMealFirebaseJobService.class)
+                .setTag(WORLD_MEAL_SYNC_TAG)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(
+                        SYNC_INTERVAL_SECONDS,
+                        SYNC_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+                .setReplaceCurrent(true)
+                .build();
+
+        dispatcher.schedule(syncMealOfDayJob);
     }
 
     public void fetchAreaList() {

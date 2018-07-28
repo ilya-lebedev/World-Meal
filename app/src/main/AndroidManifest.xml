@@ -45,6 +45,14 @@
         <activity android:name=".ui.list.MealListActivity"></activity>
 
         <service
+            android:name=".data.network.WorldMealFirebaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".data.network.WorldMealSyncIntentService"
             android:exported="false" />
 

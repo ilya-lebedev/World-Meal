@@ -16,8 +16,30 @@
 
 package io.github.ilya_lebedev.worldmeal.data.network;
 
+import com.firebase.jobdispatcher.JobParameters;
+import com.firebase.jobdispatcher.JobService;
+
+import io.github.ilya_lebedev.worldmeal.utilities.WorldMealInjectorUtils;
+
 /**
  * WorldMealFirebaseJobService
  */
-public class WorldMealFirebaseJobService {
+public class WorldMealFirebaseJobService extends JobService {
+
+    @Override
+    public boolean onStartJob(JobParameters job) {
+        WorldMealNetworkDataSource networkDataSource =
+                WorldMealInjectorUtils.provideNetworkDataSource(this.getApplicationContext());
+        networkDataSource.fetchMealOfDay();
+
+        jobFinished(job, false);
+
+        return true;
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters job) {
+        return true;
+    }
+
 }

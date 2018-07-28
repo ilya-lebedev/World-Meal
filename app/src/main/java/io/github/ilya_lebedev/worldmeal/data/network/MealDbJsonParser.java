@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import io.github.ilya_lebedev.worldmeal.data.database.AreaEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.AreaMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.CategoryEntry;
@@ -29,13 +31,16 @@ import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.MealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.MealOfDayEntry;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.AreaMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.CategoryMealResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientListResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.IngredientMealResponse;
+import io.github.ilya_lebedev.worldmeal.data.network.response.MealOfDayResponse;
 import io.github.ilya_lebedev.worldmeal.data.network.response.MealResponse;
+import io.github.ilya_lebedev.worldmeal.utilities.WorldMealDateUtils;
 
 public class MealDbJsonParser {
 
@@ -52,6 +57,7 @@ public class MealDbJsonParser {
     private static final String MDB_ID_MEAL = "idMeal";
     private static final String MDB_STR_INSTRUCTIONS = "strInstructions";
     private static final String MDB_STR_YOUTUBE = "strYoutube";
+    private static final String MDB_STR_SOURCE = "strSource";
 
     @Nullable
     static AreaListResponse parseAreaList(final String areaListJsonStr) throws JSONException {
@@ -120,6 +126,15 @@ public class MealDbJsonParser {
         MealEntry mealEntry = mealEntryFromJson(mealListJson);
 
         return new MealResponse(mealEntry);
+    }
+
+    @Nullable
+    static MealOfDayResponse parseMealOfDay(final String mealOfDayJsonStr) throws JSONException {
+        JSONObject mealOfDayListJson = new JSONObject(mealOfDayJsonStr);
+
+        MealOfDayEntry mealOfDayEntry = mealOfDayEntryFromJson(mealOfDayListJson);
+
+        return new MealOfDayResponse(mealOfDayEntry);
     }
 
     private static AreaEntry[] areaListFromJson(final JSONObject areaListJson) throws JSONException {
@@ -284,6 +299,23 @@ public class MealDbJsonParser {
         String youtubeUrl = mealJson.getString(MDB_STR_YOUTUBE);
 
         return new MealEntry(mealId, name, category, area, instructions, thumbnail, youtubeUrl);
+    }
+
+    private static MealOfDayEntry mealOfDayEntryFromJson(final JSONObject mealOfDayListJson)
+            throws JSONException {
+        JSONArray mealOfDayJsonArray = mealOfDayListJson.getJSONArray(MDB_MEALS);
+
+        JSONObject mealOfDayJson = mealOfDayJsonArray.getJSONObject(0);
+
+        long id = mealOfDayJson.getLong(MDB_ID_MEAL);
+        String name = mealOfDayJson.getString(MDB_STR_MEAL);
+        String category = mealOfDayJson.getString(MDB_STR_CATEGORY);
+        String area = mealOfDayJson.getString(MDB_STR_AREA);
+        String thumbnail = mealOfDayJson.getString(MDB_STR_MEAL_THUMB);
+        String source = mealOfDayJson.getString(MDB_STR_SOURCE);
+        Date date = WorldMealDateUtils.getNormalizedUtcDateForToday();
+
+        return new MealOfDayEntry(id, name, category, area, thumbnail, source, date);
     }
 
 }

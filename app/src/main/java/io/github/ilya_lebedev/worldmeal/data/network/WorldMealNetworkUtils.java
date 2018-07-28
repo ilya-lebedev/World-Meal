@@ -42,6 +42,7 @@ public class WorldMealNetworkUtils {
     private static final String LIST_PATH = "list.php";
     private static final String FILTER_PATH = "filter.php";
     private static final String LOOKUP_PATH = "lookup.php";
+    private static final String RANDOM_PATH = "random.php";
 
     private static final String AREA_PARAM = "a";
     private static final String CATEGORY_PARAM = "c";
@@ -121,6 +122,15 @@ public class WorldMealNetworkUtils {
                 .build();
 
         return buildUrlFromUri(mealUri);
+    }
+
+    static URL getMealOfDayUrl() {
+        Uri mealOfDayUri = Uri.parse(MEAL_DB_BASE_URL).buildUpon()
+                .appendEncodedPath(API_KEY_PATH)
+                .appendEncodedPath(RANDOM_PATH)
+                .build();
+
+        return buildUrlFromUri(mealOfDayUri);
     }
 
     /**

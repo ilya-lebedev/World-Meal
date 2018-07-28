@@ -20,6 +20,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
+import java.util.Date;
 import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.AppExecutors;
@@ -30,8 +31,10 @@ import io.github.ilya_lebedev.worldmeal.data.database.CategoryMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.IngredientMealEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.MealEntry;
+import io.github.ilya_lebedev.worldmeal.data.database.MealOfDayEntry;
 import io.github.ilya_lebedev.worldmeal.data.database.WorldMealDao;
 import io.github.ilya_lebedev.worldmeal.data.network.WorldMealNetworkDataSource;
+import io.github.ilya_lebedev.worldmeal.utilities.WorldMealDateUtils;
 
 /**
  * WorldMealRepository
@@ -45,6 +48,8 @@ public class WorldMealRepository {
     private final WorldMealDao mWorldMealDao;
     private final WorldMealNetworkDataSource mNetworkDataSource;
     private final AppExecutors mAppExecutors;
+
+    private boolean mInitialized = false;
 
     private WorldMealRepository(WorldMealDao worldMealDao,
                                 WorldMealNetworkDataSource networkDataSource,
@@ -150,6 +155,36 @@ public class WorldMealRepository {
                 });
             }
         });
+
+        LiveData<MealOfDayEntry> networkMealOfDayData = mNetworkDataSource.getCurrentMealOfDay();
+        networkMealOfDayData.observeForever(new Observer<MealOfDayEntry>() {
+            @Override
+            public void onChanged(@Nullable final MealOfDayEntry mealOfDayEntry) {
+                mAppExecutors.diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        deleteOldMealOfDay();
+                        mWorldMealDao.insert(mealOfDayEntry);
+                    }
+                });
+            }
+        });
+    }
+
+    private synchronized void initializeMealOfDayData() {
+        if (mInitialized) return;
+        mInitialized = true;
+
+        mNetworkDataSource.scheduleRecurringFetchMealOfDaySync();
+
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (isMealOfDayFetchNeeded()) {
+                    startFetchMealOfDay();
+                }
+            }
+        });
     }
 
     public static WorldMealRepository getInstance(WorldMealDao worldMealDao,
@@ -159,6 +194,8 @@ public class WorldMealRepository {
             synchronized (LOCK) {
                 sInstance = new WorldMealRepository(worldMealDao, networkDataSource, appExecutors);
             }
+
+            sInstance.initializeMealOfDayData();
         }
 
         return sInstance;
@@ -255,6 +292,10 @@ public class WorldMealRepository {
         return mWorldMealDao.getMeal(mealId);
     }
 
+    public MealOfDayEntry getMealOfDay() {
+        return mWorldMealDao.getMealOfDay();
+    }
+
     private boolean isAreaListFetchNeeded() {
         int areaCount = mWorldMealDao.countAllArea();
         return (areaCount == 0);
@@ -290,6 +331,16 @@ public class WorldMealRepository {
         return (mealCount == 0);
     }
 
+    private boolean isMealOfDayFetchNeeded() {
+        int mealOfDayCount = mWorldMealDao.countAllMealOfDay();
+        return (mealOfDayCount == 0);
+    }
+
+    private void deleteOldMealOfDay() {
+        Date today = WorldMealDateUtils.getNormalizedUtcDateForToday();
+        mWorldMealDao.deleteOldMealOfDay(today);
+    }
+
     private void startFetchAreaList() {
         mNetworkDataSource.startFetchAreaList();
     }
@@ -316,6 +367,10 @@ public class WorldMealRepository {
 
     private void startFetchMeal(long mealId) {
         mNetworkDataSource.startFetchMeal(mealId);
+    }
+
+    private void startFetchMealOfDay() {
+        mNetworkDataSource.startFetchMealOfDay();
     }
 
 }

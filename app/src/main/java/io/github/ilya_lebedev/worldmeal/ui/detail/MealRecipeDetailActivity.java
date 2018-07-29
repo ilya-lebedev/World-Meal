@@ -87,11 +87,27 @@ public class MealRecipeDetailActivity extends AppCompatActivity {
     }
 
     private void bindMealToUI(MealEntry mealEntry) {
+        String name = mealEntry.getName();
+        String category = mealEntry.getCategory();
+        String area = mealEntry.getArea();
+        String instructions = mealEntry.getInstructions();
+
+        String thumbnailA11y = getString(R.string.a11y_meal_thumbnail, name);
+        String nameA11y = getString(R.string.a11y_meal_name, name);
+        String categoryA11y = getString(R.string.a11y_meal_category, category);
+        String areaA11y = getString(R.string.a11y_meal_area, area);
+        String instructionsA11y = getString(R.string.a11y_meal_instructions, instructions);
+
         Picasso.with(this).load(Uri.parse(mealEntry.getThumbnail())).into(mThumbnail);
-        mName.setText(mealEntry.getName());
-        mCategory.setText(mealEntry.getCategory());
-        mArea.setText(mealEntry.getArea());
-        mInstructions.setText(mealEntry.getInstructions());
+        mThumbnail.setContentDescription(thumbnailA11y);
+        mName.setText(name);
+        mName.setContentDescription(nameA11y);
+        mCategory.setText(category);
+        mCategory.setContentDescription(categoryA11y);
+        mArea.setText(area);
+        mArea.setContentDescription(areaA11y);
+        mInstructions.setText(instructions);
+        mInstructions.setContentDescription(instructionsA11y);
     }
 
     /**

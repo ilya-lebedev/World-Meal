@@ -69,9 +69,13 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealLi
 
         String thumbnail = currentEntry.getThumbnail();
         String name = currentEntry.getName();
+        String thumbnailA11y = mContext.getString(R.string.a11y_meal_thumbnail, name);
+        String nameA11y = mContext.getString(R.string.a11y_meal_name, name);
 
         Picasso.with(mContext).load(Uri.parse(thumbnail)).into(holder.thumbnail);
+        holder.thumbnail.setContentDescription(thumbnailA11y);
         holder.mealName.setText(name);
+        holder.mealName.setContentDescription(nameA11y);
     }
 
     @Override

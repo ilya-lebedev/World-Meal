@@ -65,8 +65,10 @@ public class ClassificationListAdapter extends
         ClassificationEntry currentEntry = mClassificationEntries.get(position);
 
         String entryName = currentEntry.getName();
+        String nameA11y = mContext.getString(R.string.a11y_classification_name, entryName);
 
         holder.entryNameTv.setText(entryName);
+        holder.entryNameTv.setContentDescription(nameA11y);
     }
 
     @Override

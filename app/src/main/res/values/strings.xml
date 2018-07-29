@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">World Meal</string>
 
     <string name="category_title">Category</string>
@@ -26,5 +26,16 @@
     <string name="tab_areas">Areas</string>
     <string name="tab_categories">Categories</string>
     <string name="tab_ingredients">Ingredients</string>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      - Used for Accessibility purposes (Accessibility == a11y)                            -
+      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <string name="a11y_classification_name"><xliff:g id="name">%1$s</xliff:g> meal</string>
+    <string name="a11y_meal_thumbnail">Meal thumbnail: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="a11y_meal_name">Meal name: <xliff:g id="name">%1$s</xliff:g></string>
+    <string name="a11y_meal_area">Meal area: <xliff:g id="area">%1$s</xliff:g></string>
+    <string name="a11y_meal_category">Meal category: <xliff:g id="category">%1$s</xliff:g></string>
+    <string name="a11y_meal_instructions">Meal instructions: <xliff:g id="instructions">%1$s</xliff:g></string>
 
 </resources>

@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.R;
@@ -62,6 +64,8 @@ public class ClassificationFragment extends Fragment
 
     private int mClassificationType;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     public ClassificationFragment() {
         // Required empty public constructor
     }
@@ -86,6 +90,8 @@ public class ClassificationFragment extends Fragment
         if (getArguments() != null) {
             mClassificationType = getArguments().getInt(ARG_CLASSIFICATION_TYPE);
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
     }
 
     private void initializeData() {
@@ -186,6 +192,11 @@ public class ClassificationFragment extends Fragment
 
     @Override
     public void onClick(String classificationEntryName) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, classificationEntryName);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "list_item");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, bundle);
+
         startMealListActivity(classificationEntryName);
     }
 

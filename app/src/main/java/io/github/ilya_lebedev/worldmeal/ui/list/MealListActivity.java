@@ -28,6 +28,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 
 import io.github.ilya_lebedev.worldmeal.R;
@@ -59,6 +61,8 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
 
     private int mClassificationType;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,10 +88,17 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
         showLoading();
 
         initializeData(classificationEntryName);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
     public void onClick(long mealId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Long.toString(mealId));
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "list_item");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, bundle);
+
         Intent startIntent = MealRecipeDetailActivity.getStartIntent(this, mealId);
         startActivity(startIntent);
     }

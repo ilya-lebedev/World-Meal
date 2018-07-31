@@ -32,6 +32,7 @@
         <activity
             android:name=".ui.classification.ClassificationActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,9 +41,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.detail.MealRecipeDetailActivity" />
+        <activity
+            android:name=".ui.detail.MealRecipeDetailActivity"
+            android:parentActivityName=".ui.list.MealListActivity" />
 
-        <activity android:name=".ui.list.MealListActivity"></activity>
+        <activity
+            android:name=".ui.list.MealListActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.classification.ClassificationActivity" />
 
         <service
             android:name=".data.network.WorldMealFirebaseJobService"
@@ -59,7 +65,8 @@
         <service
             android:name=".widget.MealWidgetService" />
 
-        <receiver android:name=".widget.MealWidgetProvider">
+        <receiver
+            android:name=".widget.MealWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

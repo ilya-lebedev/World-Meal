@@ -97,7 +97,7 @@ public class MealListActivity extends AppCompatActivity implements MealListAdapt
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Long.toString(mealId));
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "list_item");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, bundle);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         Intent startIntent = MealRecipeDetailActivity.getStartIntent(this, mealId);
         startActivity(startIntent);

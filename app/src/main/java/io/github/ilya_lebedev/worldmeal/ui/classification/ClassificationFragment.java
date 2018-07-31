@@ -204,9 +204,10 @@ public class ClassificationFragment extends Fragment
     @Override
     public void onClick(String classificationEntryName) {
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, classificationEntryName);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, classificationEntryName);
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "list_item");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, bundle);
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, classificationEntryName);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         startMealListActivity(classificationEntryName);
     }

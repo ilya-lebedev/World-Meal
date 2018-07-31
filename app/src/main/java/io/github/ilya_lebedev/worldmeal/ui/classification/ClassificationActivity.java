@@ -22,6 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.google.android.gms.ads.MobileAds;
+
 import io.github.ilya_lebedev.worldmeal.R;
 
 /**
@@ -47,6 +49,9 @@ public class ClassificationActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(mViewPager);
+
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
     }
 
 }

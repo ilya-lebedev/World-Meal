@@ -27,6 +27,8 @@
     <string name="tab_categories">Categories</string>
     <string name="tab_ingredients">Ingredients</string>
 
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       - Used for Accessibility purposes (Accessibility == a11y)                            -
